@@ -1,0 +1,61 @@
+name: flutter
+base: core18
+version: '0.0'
+summary: Flutter
+description: |
+  This is my-snap's description. You have a paragraph or two to tell the
+  most important story about your snap. Keep it under 100 words though,
+  we live in tweetspace and your description wants to look good in the snap
+  store.
+
+grade: stable
+confinement: strict
+
+layout:
+  /usr/share/git-core:
+    bind: $SNAP/usr/share/git-core
+  /usr/lib/git-core:
+    bind: $SNAP/usr/lib/git-core
+  /usr/include:
+    bind: $SNAP/usr/include
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmvec_nonshared.a:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmvec_nonshared.a
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc_nonshared.a:
+    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc_nonshared.a
+
+parts:
+  flutter:
+    plugin: nil
+    source: .
+    override-build: |
+      cp flutter.sh $SNAPCRAFT_PART_INSTALL/
+    stage-packages:
+      - git
+      - curl
+      - unzip
+      - clang
+      - libstdc++-8-dev
+      - make
+      - rsync
+      - libxcursor1
+      - libxinerama1
+      - libxrandr2
+      - libxxf86vm1
+      - libgl1
+      - libx11-6
+
+    prime:
+      - -lib32
+      - -usr/lib32
+
+apps:
+  flutter:
+    command: flutter.sh
+    plugs:
+      - home
+      - network
+      - removable-media
+    environment:
+      HOME: $SNAP_USER_COMMON
+      CPPFLAGS: '-I${SNAP}/usr/include/'
+      LDFLAGS: '-L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/usr/lib/'
