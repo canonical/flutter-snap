@@ -23,6 +23,20 @@ layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc_nonshared.a:
     symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc_nonshared.a
 
+apps:
+  flutter:
+    command: flutter.sh
+    extensions: [gnome-3-34]
+    plugs:
+      - home
+      - network
+      - removable-media
+    environment:
+      HOME: $SNAP_USER_COMMON
+      CPPFLAGS: '-I${SNAP}/usr/include/'
+      LDFLAGS: '-L${SNAP}/gnome-platform/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/gnome-platform/usr/lib/-L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/usr/lib/'
+      __EGL_VENDOR_LIBRARY_DIRS: $__EGL_VENDOR_LIBRARY_DIRS:$SNAP/gnome-platform/usr/share/glvnd/egl_vendor.d
+
 parts:
   flutter:
     plugin: nil
@@ -43,19 +57,19 @@ parts:
       - libxxf86vm1
       - libgl1
       - libx11-6
-
     prime:
       - -lib32
       - -usr/lib32
+      - -usr/lib/llvm-6.0/lib/clang/6.0.0/lib/linux/*i386*
 
-apps:
-  flutter:
-    command: flutter.sh
-    plugs:
-      - home
-      - network
-      - removable-media
-    environment:
-      HOME: $SNAP_USER_COMMON
-      CPPFLAGS: '-I${SNAP}/usr/include/'
-      LDFLAGS: '-L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/usr/lib/'
+  # Find files provided by the base and platform snap and ensure they aren't
+  # duplicated in this snap
+  cleanup:
+    after: [flutter]
+    plugin: nil
+    build-snaps: [core18, gnome-3-34-1804]
+    override-prime: |
+      set -eux
+      for snap in "core18" "gnome-3-34-1804"; do
+        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
+      done
