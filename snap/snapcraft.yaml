@@ -1,12 +1,10 @@
 name: flutter
 base: core18
-version: '0.0'
+version: git
 summary: Flutter
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  Flutter is Google’s UI toolkit for building beautiful, natively compiled
+  applications for mobile, web, and desktop from a single codebase.
 
 grade: stable
 confinement: strict
