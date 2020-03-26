@@ -4,7 +4,7 @@ FLUTTER=$SNAP_USER_COMMON/flutter/bin/flutter
 
 if [ ! -d "$SNAP_USER_COMMON/flutter" ]; then
     echo "Initializing Flutter"
-    git clone https://github.com/flutter/flutter.git $SNAP_USER_COMMON/flutter
+    git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
     if [ -x $FLUTTER ]; then
       echo "Flutter initialized"
       $FLUTTER --version
