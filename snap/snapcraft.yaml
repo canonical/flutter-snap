@@ -29,6 +29,7 @@ apps:
       - home
       - network
       - removable-media
+      - adb-support
     environment:
       HOME: $SNAP_USER_COMMON
       CPPFLAGS: '-I${SNAP}/usr/include/'
