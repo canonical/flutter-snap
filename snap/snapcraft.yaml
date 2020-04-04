@@ -45,6 +45,7 @@ parts:
     override-build: |
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
     stage-packages:
+      - jq
       - git
       - curl
       - unzip
