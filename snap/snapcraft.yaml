@@ -31,12 +31,6 @@ parts:
       - libstdc++-8-dev
       - make
       - rsync
-      - libxcursor1
-      - libxinerama1
-      - libxrandr2
-      - libxxf86vm1
-      - libgl1
-      - libx11-6
 
     prime:
       - -lib32
