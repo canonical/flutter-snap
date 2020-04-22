@@ -14,6 +14,12 @@ architectures:
 apps:
   flutter:
     command: flutter.sh
+    environment:
+      HOME: $SNAP_USER_COMMON
+      PATH: ${SNAP}/usr/bin:${SNAP}/bin:$PATH
+      CPPFLAGS: '-I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include'
+      LDFLAGS: '-L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/usr/lib/'
+      PKG_CONFIG_PATH: /snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/share/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:$PKG_CONFIG_PATH
 
 parts:
   flutter:
