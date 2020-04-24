@@ -17,9 +17,15 @@ apps:
     environment:
       HOME: $SNAP_USER_COMMON
       PATH: ${SNAP}/usr/bin:${SNAP}/bin:$PATH
-      CPPFLAGS: '-I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include'
-      LDFLAGS: '-L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/ -L${SNAP}/usr/lib/'
-      PKG_CONFIG_PATH: /snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/share/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:$PKG_CONFIG_PATH
+      GIT_EXEC_PATH: ${SNAP}/usr/lib/git-core
+      GIT_CONFIG_NOSYSTEM: 1
+      CPLUS_INCLUDE_PATH: ${SNAP}/usr/include/c++/8:${SNAP}/usr/include:${SNAP}/usr/include/${SNAPCRAFT_ARCH_TRIPLET}:${SNAP}/usr/include/c++/8
+      LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}:${SNAP}/usr/lib
+      #C_INCLUDE_PATH: ${SNAP}/usr/include:${SNAP}/usr/include/${SNAPCRAFT_ARCH_TRIPLET}
+      #CPPFLAGS: '${CPPFLAGS} -I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include ${CPPFLAGS}'
+      #CFLAGS: '${CFLAGS} -I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include ${CFLAGS}'
+      LDFLAGS: '${LDFLAGS} -L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET} -L${SNAP}/usr/lib/ ${LDFLAGS}'
+      PKG_CONFIG_PATH: /snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/share/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
 
 parts:
   flutter:
@@ -37,6 +43,9 @@ parts:
       - libstdc++-8-dev
       - make
       - rsync
+      - libglu1-mesa
+      - libgtk-3-dev
+      - pkg-config
 
     prime:
       - -lib32
@@ -44,3 +53,27 @@ parts:
       - -usr/lib/llvm-6.0/lib/clang/6.0.0/lib/linux/*i386*
       - -usr/share/doc
       - -usr/share/man
+
+  # Fix pkgconfig files
+  pkgconfig:
+    after: [flutter]
+    plugin: nil
+    override-prime: |
+      set -eux
+      for PC in $(find . -path "*/pkgconfig/*.pc")
+      do
+        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
+        sed -i 's#prefix = /usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
+        sed -i 's#prefix=/usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
+        sed -i 's#original_prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#original_prefix=/usr#' $PC
+
+        sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+        sed -i 's#libdir=/lib#libdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/lib#' $PC
+
+        sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+        sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/etc#' $PC
+
+        sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $PC
+        sed -i 's#/etc/#/snap/$SNAPCRAFT_PROJECT_NAME/current/etc/#g' $PC
+      done
