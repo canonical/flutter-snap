@@ -1,8 +1,6 @@
 #!/bin/bash
 
 FLUTTER=$SNAP_USER_COMMON/flutter/bin/flutter
-# Ensure we use the CA from core18
-CURL_CA_BUNDLE=/snap/core18/current/etc/ssl/certs/ca-certificates.crt
 
 reset_install () {
   echo "Resetting flutter repository"
