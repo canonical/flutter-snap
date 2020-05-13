@@ -15,7 +15,6 @@ apps:
   flutter:
     command: flutter.sh
     environment:
-      HOME: $SNAP_USER_COMMON
       PATH: ${SNAP}/usr/bin:${SNAP}/bin:$PATH
       GIT_EXEC_PATH: ${SNAP}/usr/lib/git-core
       GIT_CONFIG_NOSYSTEM: 1
