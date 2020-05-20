@@ -28,6 +28,26 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
+patch_engine () {
+  # Ideally patch once:
+  engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
+  snap_current="/snap/${SNAP_NAME}/current"
+
+  # If the engine is there, we may already have it.
+  if [ -f "${engine}" ]; then
+    return
+  fi
+
+  "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
+
+  if [ -f "${engine}" ]; then
+    echo foo
+    "${SNAP}"/usr/bin/patchelf \
+      --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
+      "${engine}"
+  fi
+}
+
 if [ "$1" == "--reset" ];
 then
   reset_install
@@ -53,4 +73,12 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
+# TODO better CLI parsing.
+# TODO consider run
+if [ "$1" == "build" ] && [ "$2" == "linux" ];
+then
+  patch_engine
+fi
+
 $FLUTTER "$@"
+
