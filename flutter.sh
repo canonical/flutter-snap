@@ -29,19 +29,21 @@ download_flutter_git () {
 }
 
 patch_engine () {
+  if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
+  then
+    return
+  fi
+
   # Ideally patch once:
   engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
   snap_current="/snap/${SNAP_NAME}/current"
 
-  # If the engine is there, we may already have it.
-  if [ -f "${engine}" ]; then
-    return
+  # If the engine isn't there, cache it.
+  if [ ! -f "${engine}" ]; then
+    "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
   fi
 
-  "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
-
   if [ -f "${engine}" ]; then
-    echo foo
     "${SNAP}"/usr/bin/patchelf \
       --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
       "${engine}"
@@ -73,9 +75,7 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
-# TODO better CLI parsing.
-# TODO consider run
-if [ "$1" == "build" ] && [ "$2" == "linux" ];
+if [ "$1" == "build" ] || [ "$1" == "run" ];
 then
   patch_engine
 fi
