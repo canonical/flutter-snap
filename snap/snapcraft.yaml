@@ -42,7 +42,8 @@ parts:
       - unzip
       - clang
       - libstdc++-8-dev
-      - make
+      - cmake
+      - ninja-build
       - rsync
       - libglu1-mesa
       - libgtk-3-dev
