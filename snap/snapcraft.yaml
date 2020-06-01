@@ -34,6 +34,7 @@ parts:
     source: .
     override-build: |
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
+      cp -r patches $SNAPCRAFT_PART_INSTALL/
     stage-packages:
       - jq
       - xz-utils
@@ -99,7 +100,3 @@ parts:
             -e "s# /lib/x86_64-linux-gnu# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/x86_64-linux-gnu#g" \
             -e "s# \(/usr/lib/x86_64-linux-gnu/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
       done
-      sed -i usr/bin/ldd \
-          -e 's#RTLDLIST="#RTLDLIST="/snap/flutter/current/lib64/ld-linux-x86-64.so.2" \# #g'
-      cd lib/x86_64-linux-gnu/
-      ln -rsf ld-2.27.so ../../lib64/ld-linux-x86-64.so.2
