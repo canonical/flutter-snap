@@ -28,6 +28,28 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
+patch_engine () {
+  if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
+  then
+    return
+  fi
+
+  # Ideally patch once:
+  engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
+  snap_current="/snap/${SNAP_NAME}/current"
+
+  # If the engine isn't there, cache it.
+  if [ ! -f "${engine}" ]; then
+    "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
+  fi
+
+  if [ -f "${engine}" ]; then
+    "${SNAP}"/usr/bin/patchelf \
+      --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
+      "${engine}"
+  fi
+}
+
 if [ "$1" == "--reset" ];
 then
   reset_install
@@ -53,4 +75,18 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
+if [ "$1" == "build" ] || [ "$1" == "run" ];
+then
+  patch_engine
+fi
+
 $FLUTTER "$@"
+
+if [ "$1" == "create" ];
+then
+  if "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
+  then
+    cd ${2}/linux
+    patch -Ni ${SNAP}/patches/fix-engine-install-rpath.diff -r /dev/null
+  fi
+fi
