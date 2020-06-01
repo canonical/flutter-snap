@@ -9,8 +9,4 @@ index 2fb186a59..333fa09a4 100644
 +  execute_process(COMMAND patchelf --set-rpath $ORIGIN ${FLUTTER_LIBRARY_DIR}/libflutter_linux_glfw.so)
    include(BundleUtilities)
    fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${BINARY_NAME}\" \"\"
--    \"${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR}\")
-+    \"${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR};/usr/lib/x86_64-linux-gnu;/snap/flutter/current/usr/lib/x86_64-linux-gnu\")
-   " COMPONENT Runtime)
- 
- INSTALL(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
+     \"${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR}\")
