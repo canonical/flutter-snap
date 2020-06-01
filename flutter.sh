@@ -82,11 +82,11 @@ fi
 
 $FLUTTER "$@"
 
-if [ "$1" == "create" ];
+if [ "$1" == "create" ] && [ -d "${!#}" ];
 then
   if "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
   then
-    cd ${2}/linux
+    cd ${!#}/linux
     patch -Ni ${SNAP}/patches/fix-engine-install-rpath.diff -r /dev/null
   fi
 fi
