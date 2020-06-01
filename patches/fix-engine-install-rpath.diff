@@ -10,7 +10,7 @@ index 2fb186a59..333fa09a4 100644
    include(BundleUtilities)
    fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${BINARY_NAME}\" \"\"
 -    \"${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR}\")
-+    \"${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR};/snap/flutter/current/usr/lib/x86_64-linux-gnu\")
++    \"/usr/lib/x86_64-linux-gnu;${FLUTTER_PLUGIN_DIRS};${FLUTTER_LIBRARY_DIR};/snap/flutter/current/usr/lib/x86_64-linux-gnu\")
    " COMPONENT Runtime)
  
  INSTALL(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
