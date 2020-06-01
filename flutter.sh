@@ -87,6 +87,6 @@ then
   if "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
   then
     cd ${2}/linux
-    patch < ${SNAP}/patches/fix-engine-install-rpath.diff
+    patch -Ni ${SNAP}/patches/fix-engine-install-rpath.diff -r /dev/null
   fi
 fi
