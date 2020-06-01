@@ -34,6 +34,7 @@ parts:
     source: .
     override-build: |
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
+      cp -r patches $SNAPCRAFT_PART_INSTALL/
     stage-packages:
       - jq
       - xz-utils
