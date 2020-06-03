@@ -35,19 +35,26 @@ patch_engine () {
   fi
 
   # Ideally patch once:
-  engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
-  snap_current="/snap/${SNAP_NAME}/current"
+  debug_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
+  release_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-release/libflutter_linux_glfw.so"
+  profile_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-profile/libflutter_linux_glfw.so"
 
-  # If the engine isn't there, cache it.
-  if [ ! -f "${engine}" ]; then
-    "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
-  fi
+  engines=(${debug_engine} ${release_engine} ${profile_engine})
+  for engine in "${engines[@]}"
+  do
+    snap_current="/snap/${SNAP_NAME}/current"
 
-  if [ -f "${engine}" ]; then
-    "${SNAP}"/usr/bin/patchelf \
-      --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
-      "${engine}"
-  fi
+    # If the engine isn't there, cache it.
+    if [ ! -f "${engine}" ]; then
+      "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
+    fi
+
+    if [ -f "${engine}" ]; then
+      "${SNAP}"/usr/bin/patchelf \
+        --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
+        "${engine}"
+    fi
+  done
 }
 
 if [ "$1" == "--reset" ];
