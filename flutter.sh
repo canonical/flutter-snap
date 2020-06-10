@@ -55,6 +55,21 @@ patch_engine () {
         "${engine}"
     fi
   done
+
+  # We have to unpatch the engine from CMakeLists.txt in order for it to be usable
+  # immediately following the build step that occurs in `flutter run`
+  echo 'INSTALL(CODE "execute_process( COMMAND' \
+       'patchelf --set-rpath $ORIGIN ${INSTALL_BUNDLE_LIB_DIR}/libflutter_linux_glfw.so' \
+       ')")' >> ./linux/CMakeLists.txt
+}
+
+unpatch_engine () {
+  if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
+  then
+    return
+  fi
+
+  sed -i '$ d' ./linux/CMakeLists.txt
 }
 
 if [ "$1" == "--reset" ];
@@ -85,15 +100,8 @@ fi
 if [ "$1" == "build" ] || [ "$1" == "run" ];
 then
   patch_engine
-fi
-
-$FLUTTER "$@"
-
-if [ "$1" == "create" ] && [ -d "${!#}" ];
-then
-  if "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
-  then
-    cd ${!#}/linux
-    patch -Ni ${SNAP}/patches/fix-engine-install-rpath.diff -r /dev/null
-  fi
+  $FLUTTER "$@"  
+  unpatch_engine
+else
+  $FLUTTER "$@"
 fi
