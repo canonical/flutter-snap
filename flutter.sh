@@ -28,27 +28,36 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
-patch_engine () {
+dbg_engine_dir="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64"
+rls_engine_dir="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-release"
+pfl_engine_dir="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-profile"
+glfw_dbg_engine="${dbg_engine_dir}/libflutter_linux_glfw.so"
+glfw_rls_engine="${rls_engine_dir}/libflutter_linux_glfw.so"
+glfw_pfl_engine="${pfl_engine_dir}/libflutter_linux_glfw.so"
+
+patch_glfw () {
   if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
   then
     return
   fi
 
-  # Ideally patch once:
-  debug_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
-  release_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-release/libflutter_linux_glfw.so"
-  profile_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-profile/libflutter_linux_glfw.so"
+  # If the engine cache is not present, cache it now
+  if [ ! -d "${dbg_engine_dir}" ] || [ ! -d "${rls_engine_dir}" ] || [ ! -d "${pfl_engine_dir}" ];
+  then
+    "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
+  fi
 
-  engines=(${debug_engine} ${release_engine} ${profile_engine})
+  # There are no GLFW engines present, no need to patch
+  if [ ! -f "${glfw_dbg_engine}" ] || [ ! -f "${glfw_rls_engine}" ] || [ ! -f "${glfw_pfl_engine}" ];
+  then
+    return
+  fi
+
+  # Patch the GLFW debug, release, and profile engines
+  engines=(${glfw_dbg_engine} ${glfw_rls_engine} ${glfw_pfl_engine})
+  snap_current="/snap/${SNAP_NAME}/current"
   for engine in "${engines[@]}"
   do
-    snap_current="/snap/${SNAP_NAME}/current"
-
-    # If the engine isn't there, cache it.
-    if [ ! -f "${engine}" ]; then
-      "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
-    fi
-
     if [ -f "${engine}" ]; then
       "${SNAP}"/usr/bin/patchelf \
         --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
@@ -63,8 +72,14 @@ patch_engine () {
        ')")' >> ./linux/CMakeLists.txt
 }
 
-unpatch_engine () {
+unpatch_glfw () {
   if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
+  then
+    return
+  fi
+
+  # There are no GLFW engines present, no need to unpatch
+  if [ ! -f "${glfw_dbg_engine}" ] || [ ! -f "${glfw_rls_engine}" ] || [ ! -f "${glfw_pfl_engine}" ];
   then
     return
   fi
@@ -99,9 +114,9 @@ fi
 
 if [ "$1" == "build" ] || [ "$1" == "run" ];
 then
-  patch_engine
-  $FLUTTER "$@"  
-  unpatch_engine
+  patch_glfw
+  $FLUTTER "$@"
+  unpatch_glfw
 else
   $FLUTTER "$@"
 fi
