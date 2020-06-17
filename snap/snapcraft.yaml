@@ -22,9 +22,6 @@ apps:
       GIT_SSL_CAINFO: /snap/core18/current/etc/ssl/certs/ca-certificates.crt
       CPLUS_INCLUDE_PATH: ${SNAP}/usr/include/${SNAPCRAFT_ARCH_TRIPLET}/c++/8:${SNAP}/usr/include/c++/8:${SNAP}/usr/include:${SNAP}/usr/include/${SNAPCRAFT_ARCH_TRIPLET}:${SNAP}/usr/include/c++/8
       LIBRARY_PATH: ${SNAP}/usr/lib/gcc/${SNAPCRAFT_ARCH_TRIPLET}/8:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}:${SNAP}/usr/lib
-      #C_INCLUDE_PATH: ${SNAP}/usr/include:${SNAP}/usr/include/${SNAPCRAFT_ARCH_TRIPLET}
-      #CPPFLAGS: '${CPPFLAGS} -I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include ${CPPFLAGS}'
-      #CFLAGS: '${CFLAGS} -I${SNAP}/usr/include/c++/8 -I${SNAP}/usr/include ${CFLAGS}'
       LDFLAGS: '${LDFLAGS} -L${SNAP}/usr/lib/gcc/${SNAPCRAFT_ARCH_TRIPLET}/8 -L${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET} -L${SNAP}/usr/lib/ ${LDFLAGS}'
       PKG_CONFIG_PATH: /snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/share/pkgconfig:/snap/${SNAPCRAFT_PROJECT_NAME}/current/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
 
@@ -50,7 +47,6 @@ parts:
       - pkg-config
       - libc6
       - libc-bin
-      - patchelf
 
     prime:
       - -lib32

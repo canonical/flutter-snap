@@ -28,50 +28,6 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
-patch_engine () {
-  if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
-  then
-    return
-  fi
-
-  # Ideally patch once:
-  debug_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64/libflutter_linux_glfw.so"
-  release_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-release/libflutter_linux_glfw.so"
-  profile_engine="${SNAP_USER_COMMON}/flutter/bin/cache/artifacts/engine/linux-x64-profile/libflutter_linux_glfw.so"
-
-  engines=(${debug_engine} ${release_engine} ${profile_engine})
-  for engine in "${engines[@]}"
-  do
-    snap_current="/snap/${SNAP_NAME}/current"
-
-    # If the engine isn't there, cache it.
-    if [ ! -f "${engine}" ]; then
-      "${FLUTTER}" precache --linux --no-android --no-ios --no-web --no-macos --no-windows
-    fi
-
-    if [ -f "${engine}" ]; then
-      "${SNAP}"/usr/bin/patchelf \
-        --set-rpath "${snap_current}/lib/x86_64-linux-gnu:${snap_current}/usr/lib/x86_64-linux-gnu" \
-        "${engine}"
-    fi
-  done
-
-  # We have to unpatch the engine from CMakeLists.txt in order for it to be usable
-  # immediately following the build step that occurs in `flutter run`
-  echo 'INSTALL(CODE "execute_process( COMMAND' \
-       'patchelf --set-rpath $ORIGIN ${INSTALL_BUNDLE_LIB_DIR}/libflutter_linux_glfw.so' \
-       ')")' >> ./linux/CMakeLists.txt
-}
-
-unpatch_engine () {
-  if ! "${FLUTTER}" config | grep enable-linux-desktop | grep true > /dev/null;
-  then
-    return
-  fi
-
-  sed -i '$ d' ./linux/CMakeLists.txt
-}
-
 if [ "$1" == "--reset" ];
 then
   reset_install
@@ -97,11 +53,4 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
-if [ "$1" == "build" ] || [ "$1" == "run" ];
-then
-  patch_engine
-  $FLUTTER "$@"  
-  unpatch_engine
-else
-  $FLUTTER "$@"
-fi
+$FLUTTER "$@"
