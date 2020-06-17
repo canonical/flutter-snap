@@ -1,0 +1,5 @@
+#!/bin/sh -e
+# Hook to ensure PATH is set properly
+
+mkdir -p /etc/profile.d
+cp ${SNAP}/profile /etc/profile.d/flutter-sdk-snap.sh
