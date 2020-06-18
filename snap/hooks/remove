@@ -1,4 +1,4 @@
 #!/bin/sh -e
 # Hook to ensure PATH is set properly
 
-rm -f /etc/profile.d/flutter-sdk-snap.sh
+rm -f /etc/profile.d/ZZflutter-sdk-snap.sh
