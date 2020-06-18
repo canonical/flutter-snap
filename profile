@@ -5,3 +5,5 @@ flutter_bin_path="/snap/flutter/current/usr/bin"
 if [ -n "${PATH##*${flutter_bin_path}}" -a -n "${PATH##*${flutter_bin_path}:*}" ]; then
     export PATH=$PATH:${flutter_bin_path}
 fi
+
+export FLUTTER_ROOT=${FLUTTER_ROOT-${HOME}/snap/flutter/common/flutter}
