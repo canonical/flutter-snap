@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+SCRIPT_DIR=`dirname $0`
 . $SCRIPT_DIR/env.sh
 
 FLUTTER=$SNAP_USER_COMMON/flutter/bin/flutter
