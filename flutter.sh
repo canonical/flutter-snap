@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCRIPT_DIR=`dirname $0`
+. $SCRIPT_DIR/env.sh
+
 FLUTTER=$SNAP_USER_COMMON/flutter/bin/flutter
 
 reset_install () {
@@ -11,6 +14,7 @@ reset_install () {
 # Download stable via tarball
 download_flutter () {
   # Determine URL for latest stable release
+  mkdir -p $SNAP_USER_COMMON
   cd $SNAP_USER_COMMON
   curl -s -o releases_linux.json https://storage.googleapis.com/flutter_infra/releases/releases_linux.json
   base_url=$(cat releases_linux.json | jq -r '.base_url')
