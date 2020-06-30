@@ -25,7 +25,6 @@ parts:
 
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
       sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' $ENV_SH
-      sed -i 's#<SNAPCRAFT_PROJECT_NAME>#$SNAPCRAFT_PROJECT_NAME#' $ENV_SH
     stage-packages:
       - jq
       - xz-utils

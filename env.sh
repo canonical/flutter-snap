@@ -1,12 +1,11 @@
 #!/bin/bash
 
-export SNAPCRAFT_ARCH_TRIPLET=<SNAPCRAFT_ARCH_TRIPLET>
+SNAPCRAFT_ARCH_TRIPLET=<SNAPCRAFT_ARCH_TRIPLET>
 
-if [ -z "$SNAP" ]
+if [ -z $SNAP_NAME ] || [ $SNAP_NAME != flutter ]
 then
-  export SNAPCRAFT_PROJECT_NAME=<SNAPCRAFT_PROJECT_NAME>
-  export SNAP=/snap/$SNAPCRAFT_PROJECT_NAME/current
-  export SNAP_USER_COMMON=$HOME/snap/$SNAPCRAFT_PROJECT_NAME/common
+  SNAP=/snap/flutter/current
+  SNAP_USER_COMMON=$HOME/snap/flutter/common
 fi
 
 export PATH=$SNAP/usr/bin:$SNAP/bin:$PATH
