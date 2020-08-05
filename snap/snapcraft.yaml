@@ -41,6 +41,7 @@ parts:
       - pkg-config
       - libc6
       - libc-bin
+      - libblkid-dev
 
     prime:
       - -lib32
