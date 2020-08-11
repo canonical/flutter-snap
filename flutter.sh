@@ -1,7 +1,6 @@
 #!/bin/bash
 
-SCRIPT_DIR=`dirname $0`
-. $SCRIPT_DIR/env.sh
+. /snap/flutter/current/env.sh
 
 FLUTTER=$SNAP_USER_COMMON/flutter/bin/flutter
 
