@@ -55,6 +55,8 @@ parts:
       - -usr/include/*/c++/6*
       - -usr/include/c++/7*
       - -usr/include/*/c++/7*
+      - -usr/lib/gcc/*/6
+      - -usr/lib/gcc/*/7
 
   # Fix pkgconfig files
   pkgconfig:
