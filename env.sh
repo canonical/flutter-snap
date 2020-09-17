@@ -8,7 +8,7 @@ then
   SNAP_USER_COMMON=$HOME/snap/flutter/common
 fi
 
-export PATH=$SNAP/usr/bin:$SNAP/bin:$PATH
+export PATH=$SNAP/usr/bin:$SNAP/bin:$SNAP_USER_COMMON/flutter/bin:$PATH
 export GIT_EXEC_PATH=$SNAP/usr/lib/git-core
 export GIT_CONFIG_NOSYSTEM=1
 export CURL_CA_BUNDLE=/snap/core18/current/etc/ssl/certs/ca-certificates.crt
