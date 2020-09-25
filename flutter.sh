@@ -14,9 +14,12 @@ reset_install () {
 # Download stable via tarball
 download_flutter () {
   # Determine URL for latest stable release
+  if [ -z $FLUTTER_STORAGE_BASE_URL ]; then
+    export FLUTTER_STORAGE_BASE_URL=https://storage.googleapis.com
+  fi
   mkdir -p $SNAP_USER_COMMON
   cd $SNAP_USER_COMMON
-  curl -s -o releases_linux.json https://storage.googleapis.com/flutter_infra/releases/releases_linux.json
+  curl -s -o releases_linux.json $FLUTTER_STORAGE_BASE_URL/flutter_infra/releases/releases_linux.json
   base_url=$(cat releases_linux.json | jq -r '.base_url')
   stable=$(cat releases_linux.json | jq -r '.current_release' | jq '.stable')
   archive=$(cat releases_linux.json | jq -r --arg stable "$stable" '.releases[] | select(.hash=='$stable').archive')
@@ -32,8 +35,7 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
-if [ "$1" == "--reset" ];
-then
+if [ "$1" == "--reset" ]; then
   reset_install
   exit
 fi
