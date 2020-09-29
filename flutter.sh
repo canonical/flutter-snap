@@ -59,4 +59,7 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
+# Always copy over the bootstrap script in case of changes
+cp $SCRIPT_DIR/env.sh $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
+
 $FLUTTER "$@"
