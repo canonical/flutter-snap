@@ -35,6 +35,11 @@ download_flutter_git () {
     git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
+if [ "$1" == "version" ]; then
+  echo "WARNING: Flutter version command has been removed, using latest from channel"
+  exit
+fi
+
 if [ "$1" == "--reset" ]; then
   reset_install
   exit
