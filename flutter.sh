@@ -64,7 +64,13 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
-# Always copy over the bootstrap script in case of changes
-cp $SCRIPT_DIR/env.sh $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
-
-$FLUTTER "$@"
+if [ "$1" == "upgrade" ]; then
+  # Remove the bootstrap in case we're upgrading from stable to dev/master
+  rm -f $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
+  $FLUTTER "$@"
+  cp $SCRIPT_DIR/env.sh $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
+else
+  # Always copy over the bootstrap script in case of changes
+  cp $SCRIPT_DIR/env.sh $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
+  $FLUTTER "$@"
+fi
