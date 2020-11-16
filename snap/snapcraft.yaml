@@ -42,6 +42,7 @@ parts:
       - libc6
       - libc-bin
       - libblkid-dev
+      - liblzma-dev
 
     prime:
       - -lib32
