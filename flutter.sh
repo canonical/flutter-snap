@@ -64,7 +64,9 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
-if [ "$1" == "upgrade" ]; then
+if [ "$1" == "sdk-path" ]; then
+  echo $SNAP_USER_COMMON/flutter
+elif [ "$1" == "upgrade" ]; then
   # Remove the bootstrap in case we're upgrading from stable to dev/master
   rm -f $SNAP_USER_COMMON/flutter/bin/internal/bootstrap.sh
   $FLUTTER "$@"
