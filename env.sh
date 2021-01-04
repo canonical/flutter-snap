@@ -19,6 +19,7 @@ export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/8:$SNAP/usr/lib/$S
 export LDFLAGS="$LDFLAGS -L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/8 -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/ $LDFLAGS"
 export PKG_CONFIG_PATH=$SNAP/usr/lib/pkgconfig:$SNAP/usr/share/pkgconfig:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
 export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+export LIBGL_ALWAYS_SOFTWARE=1
 
 # Set cache folder to local path
 export XDG_CACHE_HOME=$SNAP_USER_COMMON/.cache
