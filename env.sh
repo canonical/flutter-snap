@@ -2,12 +2,9 @@
 
 SNAPCRAFT_ARCH_TRIPLET=<SNAPCRAFT_ARCH_TRIPLET>
 
-if [ -z $SNAP_NAME ] || [ $SNAP_NAME != flutter ]
-then
-  SNAP=/snap/flutter/current
-  SNAP_USER_COMMON=$HOME/snap/flutter/common
-  SNAP_USER_DATA=$HOME/snap/flutter/current
-fi
+SNAP=/snap/flutter/current
+SNAP_USER_COMMON=$HOME/snap/flutter/common
+SNAP_USER_DATA=$HOME/snap/flutter/current
 
 export PATH=$SNAP/usr/bin:$SNAP/bin:$SNAP_USER_COMMON/flutter/bin:$PATH
 export GIT_EXEC_PATH=$SNAP/usr/lib/git-core
