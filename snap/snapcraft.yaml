@@ -17,12 +17,15 @@ apps:
   openurl:
     command: openurl.sh
     desktop: flutter.desktop
+  dart:
+    command: dart.sh
 
 parts:
   flutter:
     plugin: nil
     source: .
     override-build: |
+      cp dart.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
       cp env.sh $SNAPCRAFT_PART_INSTALL/
       cp openurl.sh $SNAPCRAFT_PART_INSTALL/
