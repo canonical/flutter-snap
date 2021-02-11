@@ -18,21 +18,25 @@ export PKG_CONFIG_PATH=$SNAP/usr/lib/pkgconfig:$SNAP/usr/share/pkgconfig:$SNAP/u
 export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
 export LIBGL_ALWAYS_SOFTWARE=1
 
-# Set cache folder to local path
-export XDG_CACHE_HOME=$SNAP_USER_COMMON/.cache
-if [[ -d $SNAP_USER_DATA/.cache && ! -e $XDG_CACHE_HOME ]]; then
-  # the .cache directory used to be stored under $SNAP_USER_DATA, migrate it
-  mv $SNAP_USER_DATA/.cache $SNAP_USER_COMMON/
-fi
-mkdir -p $XDG_CACHE_HOME
+# if any gdk-pixbuf variables are already set (e.g. from the VS Code snap), override them
+if [ ! -z $GDK_PIXBUF_MODULE_FILE ] || [ ! -z $GDK_PIXBUF_MODULEDIR ]
+then
+    # Set cache folder to local path
+    export XDG_CACHE_HOME=$SNAP_USER_COMMON/.cache
+    if [[ -d $SNAP_USER_DATA/.cache && ! -e $XDG_CACHE_HOME ]]; then
+        # the .cache directory used to be stored under $SNAP_USER_DATA, migrate it
+        mv $SNAP_USER_DATA/.cache $SNAP_USER_COMMON/
+    fi
+    mkdir -p $XDG_CACHE_HOME
 
-# Create $XDG_RUNTIME_DIR if not exists (to be removed when LP: #1656340 is fixed)
-[ -n "$XDG_RUNTIME_DIR" ] && mkdir -p $XDG_RUNTIME_DIR -m 700
+    # Create $XDG_RUNTIME_DIR if not exists (to be removed when LP: #1656340 is fixed)
+    [ -n "$XDG_RUNTIME_DIR" ] && mkdir -p $XDG_RUNTIME_DIR -m 700
 
-# Gdk-pixbuf loaders
-export GDK_PIXBUF_MODULE_FILE=$XDG_CACHE_HOME/gdk-pixbuf-loaders.cache
-export GDK_PIXBUF_MODULEDIR=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
-rm -f $GDK_PIXBUF_MODULE_FILE
-if [ -f $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders ]; then
-  $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULE_FILE
+    # Gdk-pixbuf loaders
+    export GDK_PIXBUF_MODULE_FILE=$XDG_CACHE_HOME/gdk-pixbuf-loaders.cache
+    export GDK_PIXBUF_MODULEDIR=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
+    rm -f $GDK_PIXBUF_MODULE_FILE
+    if [ -f $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders ]; then
+        $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULE_FILE
+    fi
 fi
