@@ -100,6 +100,6 @@ parts:
       for so in usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpthread.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libm.so
       do
         sed -i "${so}" \
-            -e "s# /lib/$SNAPCRAFT_ARCH_TRIPLET# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/SNAPCRAFT_ARCH_TRIPLET#g" \
+            -e "s# /lib/$SNAPCRAFT_ARCH_TRIPLET# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/$SNAPCRAFT_ARCH_TRIPLET#g" \
             -e "s# \(/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
       done
