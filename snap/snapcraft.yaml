@@ -10,6 +10,7 @@ grade: stable
 confinement: classic
 architectures:
   - build-on: amd64
+  - build-on: arm64
 
 apps:
   flutter:
@@ -96,9 +97,9 @@ parts:
     plugin: nil
     override-prime: |
       set -eux
-      for so in usr/lib/x86_64-linux-gnu/libc.so usr/lib/x86_64-linux-gnu/libpthread.so usr/lib/x86_64-linux-gnu/libm.so
+      for so in usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpthread.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libm.so
       do
         sed -i "${so}" \
-            -e "s# /lib/x86_64-linux-gnu# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/x86_64-linux-gnu#g" \
-            -e "s# \(/usr/lib/x86_64-linux-gnu/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
+            -e "s# /lib/$SNAPCRAFT_ARCH_TRIPLET# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/$SNAPCRAFT_ARCH_TRIPLET#g" \
+            -e "s# \(/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
       done
