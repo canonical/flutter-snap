@@ -32,7 +32,7 @@ download_flutter () {
 
 # Download stable via git
 download_flutter_git () {
-    git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
+    git clone https://github.com/flutter/flutter.git -b master $SNAP_USER_COMMON/flutter
 }
 
 if [ "$1" == "version" ]; then
@@ -47,7 +47,11 @@ fi
 
 if [ ! -d "$SNAP_USER_COMMON/flutter/.git" ]; then
     echo "Initializing Flutter"
-    download_flutter
+    if [ "$SNAPCRAFT_ARCH_TRIPLET" == "aarch64-linux-gnu" ]; then
+        download_flutter_git
+    else
+        download_flutter
+    fi
     if [ -x $FLUTTER ]; then
       echo "Flutter initialized"
       $FLUTTER --version
