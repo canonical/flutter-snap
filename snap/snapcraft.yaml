@@ -52,6 +52,7 @@ parts:
       - libc-bin
       - libblkid-dev
       - liblzma-dev
+      - libgcrypt20-dev
 
     prime:
       - -lib32
