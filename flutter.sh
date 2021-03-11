@@ -22,7 +22,7 @@ download_flutter () {
   curl -s -o releases_linux.json $FLUTTER_STORAGE_BASE_URL/flutter_infra/releases/releases_linux.json
   base_url=$(cat releases_linux.json | jq -r '.base_url')
   stable=$(cat releases_linux.json | jq -r '.current_release' | jq '.stable')
-  archive=$(cat releases_linux.json | jq -r --arg stable "$stable" '.releases[] | select(.hash=='$stable').archive')
+  archive=$(cat releases_linux.json | jq -r --arg stable "$stable" '[.releases[] | select(.hash=='$stable')][0].archive')
   url=$base_url/$archive
   echo "Downloading $url"
   curl -o latest_stable.tar.xz --user-agent 'Flutter SDK Snap' $url
