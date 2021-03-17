@@ -1,7 +1,0 @@
-prefix=/usr
-libdir=${prefix}/lib/<SNAPCRAFT_ARCH_TRIPLET>
-
-Name: libgcrypt
-Description: General purpose cryptographic library
-Version: 1.8.1
-Libs: -L${libdir} -lgcrypt

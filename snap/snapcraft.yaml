@@ -25,17 +25,12 @@ parts:
   flutter:
     plugin: nil
     source: .
-    # TODO: Remove `cp libgcrypt.pc ...` when we move to core20
     override-build: |
       cp dart.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
       cp env.sh $SNAPCRAFT_PART_INSTALL/
       cp openurl.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.desktop $SNAPCRAFT_PART_INSTALL/
-
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-      sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' libgcrypt.pc
-      cp libgcrypt.pc $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/
 
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
       sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' $ENV_SH
