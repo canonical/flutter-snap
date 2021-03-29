@@ -1,5 +1,5 @@
 name: flutter
-base: core18
+base: core20
 version: git
 summary: Flutter
 description: |
