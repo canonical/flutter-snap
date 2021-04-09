@@ -19,7 +19,7 @@ download_flutter () {
   fi
   mkdir -p $SNAP_USER_COMMON
   cd $SNAP_USER_COMMON
-  curl -s -o releases_linux.json $FLUTTER_STORAGE_BASE_URL/flutter_infra/releases/releases_linux.json
+  curl -o releases_linux.json $FLUTTER_STORAGE_BASE_URL/flutter_infra/releases/releases_linux.json
   base_url=$(cat releases_linux.json | jq -r '.base_url')
   stable=$(cat releases_linux.json | jq -r '.current_release' | jq '.stable')
   archive=$(cat releases_linux.json | jq -r --arg stable "$stable" '[.releases[] | select(.hash=='$stable')][0].archive')
