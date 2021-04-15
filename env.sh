@@ -15,6 +15,8 @@ export CPLUS_INCLUDE_PATH=$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET/c++/8:$SNAP/
 export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/8:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib
 export LDFLAGS="-L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/8 -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -lblkid -lgcrypt -llzma -lpthread -L$SNAP/usr/lib/ $LDFLAGS"
 export PKG_CONFIG_PATH=$SNAP/usr/lib/pkgconfig:$SNAP/usr/share/pkgconfig:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
+export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+export LIBGL_ALWAYS_SOFTWARE=1
 
 # if any gdk-pixbuf variables are already set (e.g. from the VS Code snap), override them
 if [ ! -z $GDK_PIXBUF_MODULE_FILE ] || [ ! -z $GDK_PIXBUF_MODULEDIR ]
@@ -37,7 +39,4 @@ then
     if [ -f $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders ]; then
         $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULE_FILE
     fi
-
-    # also ensure that any parent snap's LIBGL_DRIVERS_PATH is unset
-    unset LIBGL_DRIVERS_PATH
 fi
