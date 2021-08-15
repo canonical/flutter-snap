@@ -53,7 +53,8 @@ parts:
       - libblkid-dev
       - liblzma-dev
       - libgcrypt20-dev
-
+      - libstdc++6
+      - libpcre3
     prime:
       - -lib32
       - -libx32
@@ -98,6 +99,9 @@ parts:
     plugin: nil
     override-prime: |
       set -eux
+
+      find . -type l -name "*.so*" -exec bash -c 'if [[ $(readlink $1) == /* ]] && [[ $(readlink $1) != /snap* ]]; then ln -sf /snap/flutter/current$(readlink $1) $1; fi' bash {} \;
+
       for so in usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpthread.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libm.so
       do
         sed -i "${so}" \
