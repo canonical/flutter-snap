@@ -49,6 +49,7 @@ parts:
       - libgtk-3-dev
       - pkg-config
       - libc6
+      - libc6-dev
       - libc-bin
       - libblkid-dev
       - liblzma-dev
