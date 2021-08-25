@@ -56,7 +56,7 @@ parts:
       - libgcrypt20-dev
       - libstdc++6
       - libpcre3
-      - i965-va-driver
+      - on amd64: [ i965-va-driver ]
     prime:
       - -lib32
       - -libx32
