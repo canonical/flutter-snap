@@ -106,8 +106,8 @@ parts:
 
       for so in usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpthread.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libm.so
       do
-        if [ -f $so ]; then
-          sed -i "${so}" \
+        if [ -f $SNAPCRAFT_PRIME/$so ]; then
+          sed -i "$SNAPCRAFT_PRIME/${so}" \
               -e "s# /lib/$SNAPCRAFT_ARCH_TRIPLET# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/$SNAPCRAFT_ARCH_TRIPLET#g" \
               -e "s# \(/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
         fi
