@@ -41,7 +41,7 @@ parts:
       - curl
       - unzip
       - clang
-      - libstdc++-8-dev
+      - libstdc++-10-dev
       - cmake
       - ninja-build
       - rsync
@@ -66,19 +66,29 @@ parts:
       - libdbus-1-3
       - libexpat1
       - libffi7
+      - libcrypt1
+      - libselinux1
+      - zlib1g
+      - libgpg-error0
+      - libsepol1
+      - libuuid1
+      - libmount1
     prime:
       - -lib32
       - -libx32
       - -usr/lib32
       - -usr/libx32
-      - -usr/lib/llvm-6.0/lib/clang/6.0.0/lib/linux/*i386*
+      - -usr/lib/llvm-*/lib/clang/*/lib/linux/*i386*
       - -usr/share/doc
       - -usr/share/man
       - -usr/include/c++/6*
       - -usr/include/*/c++/6*
       - -usr/include/c++/7*
       - -usr/include/*/c++/7*
+      - -usr/include/c++/8*
+      - -usr/include/*/c++/8*
       - -usr/lib/gcc/*/6
+      - -usr/lib/gcc/*/8
 
   # Fix pkgconfig files
   pkgconfig:
