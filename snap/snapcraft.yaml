@@ -73,6 +73,7 @@ parts:
       - libsepol1
       - libuuid1
       - libmount1
+      - libdrm-dev
     prime:
       - -lib32
       - -libx32
@@ -89,6 +90,12 @@ parts:
       - -usr/include/*/c++/8*
       - -usr/lib/gcc/*/6
       - -usr/lib/gcc/*/8
+      - -usr/share/perl*
+      - -usr/lib/*/perl*
+      - -usr/share/cmake*/Help
+      - -usr/share/icons
+      - -usr/share/pixmaps
+      - -usr/share/rsync
 
   # Fix pkgconfig files
   pkgconfig:
