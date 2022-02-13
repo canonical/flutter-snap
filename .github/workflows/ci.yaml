@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Build Flutter snap
+        uses: snapcore/action-build@v1
+        id: snapcraft
+      - name: Upload Flutter snap
+        uses: actions/upload-artifact@v2
+        with:
+          name: snap
+          path: ${{ steps.snapcraft.outputs.snap }}
+    outputs:
+      snap: ${{ steps.snapcraft.outputs.snap }}
+
+  analyze:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Download Flutter snap
+        uses: actions/download-artifact@v2
+        with:
+          name: snap
+      - name: Install Flutter snap
+        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }}
+      - name: Analyze Flutter snap
+        # capture stderr, display stdout+stderr in the CI
+        run: |
+          err=$(sudo ./.github/scripts/analyze-flutter.sh 3>&1 1>&2 2>&3 | tee >(cat - >&2))
+          if [ -n "$err" ]; then
+              while read -r line; do echo "::error ::$line"; done <<< "$err"
+              exit 1
+          fi
+
+  test:
+    needs: build
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      # one at a time to avoid conflicts due to docker host mounts
+      max-parallel: 1
+      matrix:
+        image:
+          - debian-stable
+          - fedora-34
+          - fedora-35
+          - opensuse-leap
+          - opensuse-tumbleweed
+          - ubuntu-18.04
+          - ubuntu-20.04
+          - ubuntu-21.10
+          - ubuntu-22.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Build image
+        run: sudo ./.github/scripts/build-image.sh ./.github/docker/Dockerfile.${{ matrix.image }}
+      - name: Download Flutter snap
+        uses: actions/download-artifact@v2
+        with:
+          name: snap
+      - name: Install Flutter snap
+        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }} --docker
+      - name: Build Flutter app
+        run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
+      - name: Run Flutter app
+        run: sudo ./.github/scripts/run-app.sh
+
+  cleanup:
+    needs: [build, analyze, test]
+    if: ${{ always() &&  github.event_name != 'workflow_dispatch' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Delete Flutter snap
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: snap
