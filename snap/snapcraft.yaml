@@ -63,6 +63,8 @@ parts:
       - libgpg-error0
       - zlib1g
       - libblkid1
+      - liblz4-1
+      - liblz4-dev
       - on amd64: [ i965-va-driver ]
     prime:
       - -lib32
