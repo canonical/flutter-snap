@@ -1,0 +1,17 @@
+# based on https://github.com/ogra1/snapd-docker
+FROM fedora:34
+
+ENV container docker
+ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN dnf install -y fuse snapd squashfuse sudo
+RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL xorg-x11-server-Xvfb
+
+RUN ln -sf /bin/true /sbin/udevadm
+RUN ln -s /var/lib/snapd/snap /snap
+RUN systemctl enable snapd snapd.seeded
+VOLUME ["/sys/fs/cgroup"]
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]
