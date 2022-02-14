@@ -62,8 +62,10 @@ parts:
       - liblz4-dev
       - liblzma5
       - liblzma-dev
+      - libmount1
       - libpcre3
       - libselinux1
+      - libsepol1
       - libstdc++-10-dev
       - libstdc++6
       - libuuid1
