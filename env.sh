@@ -12,10 +12,23 @@ export GIT_CONFIG_NOSYSTEM=1
 export CURL_CA_BUNDLE=/snap/core20/current/etc/ssl/certs/ca-certificates.crt
 export GIT_SSL_CAINFO=/snap/core20/current/etc/ssl/certs/ca-certificates.crt
 export CPLUS_INCLUDE_PATH=$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET/c++/9:$SNAP/usr/include/c++/9:$SNAP/usr/include:$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/include/c++/9
-export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib
-export LDFLAGS="-L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9 -L/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/ -lblkid -lgcrypt -llzma -lpthread -lrt -v $LDFLAGS"
+export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib
+export LDFLAGS="-lblkid -lgcrypt -llzma -llz4 -lgpg-error -luuid -lpthread -ldl $LDFLAGS"
+export LDFLAGS="-L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9 -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/ $LDFLAGS"
+export LDFLAGS="-B$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9 -B$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/usr/lib/ $LDFLAGS"
 export PKG_CONFIG_PATH=$SNAP/usr/lib/pkgconfig:$SNAP/usr/share/pkgconfig:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
-export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri:$LIBGL_DRIVERS_PATH
+
+# find the location of DRI drivers on the host (e.g. /usr/lib/<triplet>/dri, /usr/lib64/dri, /lib64/dri, ...)
+# https://docs.mesa3d.org/faq.html#what-s-the-proper-place-for-the-libraries-and-headers
+HOST_DRIVERS_PATH=
+CLANG_SEARCH_DIRS=$(clang++ -print-search-dirs | awk -F = '/libraries: =/{print $NF}')
+for d in ${CLANG_SEARCH_DIRS//:/$IFS}; do
+    if [ -d "$d/dri" ]; then
+        HOST_DRIVERS_PATH="$HOST_DIR_DIRS:$(realpath $d/dri)"
+    fi
+done
+SNAP_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+export LIBGL_DRIVERS_PATH=$SNAP_DRIVERS_PATH:$HOST_DRIVERS_PATH:$LIBGL_DRIVERS_PATH
 export LIBGL_ALWAYS_SOFTWARE=1
 
 # if any gdk-pixbuf variables are already set (e.g. from the VS Code snap), override them

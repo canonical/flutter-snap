@@ -1,0 +1,19 @@
+# based on https://github.com/ogra1/snapd-docker
+FROM ubuntu:18.04
+
+ENV container docker
+ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y fuse init snapd squashfuse sudo
+
+RUN dpkg-divert --local --rename --add /sbin/udevadm
+RUN ln -s /bin/true /sbin/udevadm
+RUN systemctl enable snapd snapd.seeded
+VOLUME ["/sys/fs/cgroup"]
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 xvfb
