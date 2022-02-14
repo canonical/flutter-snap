@@ -35,36 +35,36 @@ parts:
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
       sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' $ENV_SH
     stage-packages:
-      - jq
-      - xz-utils
-      - git
-      - curl
-      - unzip
       - clang
-      - libstdc++-8-dev
       - cmake
-      - ninja-build
-      - rsync
-      - libglu1-mesa
-      - libgtk-3-dev
-      - pkg-config
+      - curl
+      - git
+      - jq
+      - libblkid1
+      - libblkid-dev
       - libc6
       - libc6-dev
       - libc-bin
-      - libblkid-dev
-      - liblzma-dev
-      - libgcrypt20-dev
-      - libstdc++6
-      - libpcre3
       - libgcc1
       - libgcrypt20
-      - libuuid1
-      - liblzma5
+      - libgcrypt20-dev
+      - libglu1-mesa
       - libgpg-error0
-      - zlib1g
-      - libblkid1
+      - libgtk-3-dev
       - liblz4-1
       - liblz4-dev
+      - liblzma5
+      - liblzma-dev
+      - libpcre3
+      - libstdc++6
+      - libstdc++-8-dev
+      - libuuid1
+      - ninja-build
+      - pkg-config
+      - rsync
+      - unzip
+      - xz-utils
+      - zlib1g
       - on amd64: [ i965-va-driver ]
     prime:
       - -lib32
