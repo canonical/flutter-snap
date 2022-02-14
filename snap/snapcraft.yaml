@@ -56,6 +56,15 @@ parts:
       - libgcrypt20-dev
       - libstdc++6
       - libpcre3
+      - libgcc1
+      - libgcrypt20
+      - libuuid1
+      - liblzma5
+      - libgpg-error0
+      - zlib1g
+      - libblkid1
+      - liblz4-1
+      - liblz4-dev
       - on amd64: [ i965-va-driver ]
     prime:
       - -lib32
@@ -70,6 +79,7 @@ parts:
       - -usr/include/c++/7*
       - -usr/include/*/c++/7*
       - -usr/lib/gcc/*/6
+      - -usr/lib/gcc/*/7
 
   # Fix pkgconfig files
   pkgconfig:
