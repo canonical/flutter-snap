@@ -78,6 +78,7 @@ jobs:
         run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
       - name: Run Flutter app
         run: sudo ./.github/scripts/run-app.sh
+        timeout-minutes: 15
 
   cleanup:
     needs: [build, analyze, test]
