@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
-      # one at a time to avoid conflicts due to docker host mounts
-      max-parallel: 1
+      # few at a time to possibly reduce conflicts due to docker host mounts
+      max-parallel: 3
       matrix:
         image:
           - debian-stable
