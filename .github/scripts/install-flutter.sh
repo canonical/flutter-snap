@@ -2,16 +2,34 @@
 
 set -e
 
-SNAPFILE=${1:?"Pass snap arg"}
+DOCKER=0
+SNAP="flutter"
+ARGS="--classic"
 
-if [ "$2" = "--docker" ]; then
-    docker cp $SNAPFILE snapc:$SNAPFILE
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --docker)
+            DOCKER=1
+            ;;
+        -*)
+            ARGS="$ARGS $1"
+            ;;
+        *)
+            SNAP="$1"
+            ;;
+    esac
+    shift
+done
+
+if [ $DOCKER -eq 1 ]; then
     RUNNER="docker exec snapc"
-else
-    apt update
-    DEBIAN_FRONTEND=noninteractive apt install -y snapd
+
+    # copy if it's a .snap file
+    if [ "$(basename $SNAP .snap)" != "$SNAP" ]; then
+        docker cp $SNAP snapc:$SNAP
+    fi
 fi
 
-$RUNNER snap install --classic --dangerous $SNAPFILE
+$RUNNER snap install $ARGS $SNAP
 $RUNNER flutter config --enable-linux-desktop
 $RUNNER flutter doctor -v

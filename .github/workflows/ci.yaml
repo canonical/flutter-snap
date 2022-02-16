@@ -34,8 +34,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: snap
+      - name: Install snapd
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: sudo apt update && sudo apt install -y snapd
       - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }}
+        run: sudo ./.github/scripts/install-flutter.sh --dangerous ${{ needs.build.outputs.snap }}
       - name: Analyze Flutter snap
         # capture stderr, display stdout+stderr in the CI
         run: |
@@ -73,7 +77,7 @@ jobs:
         with:
           name: snap
       - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }} --docker
+        run: sudo ./.github/scripts/install-flutter.sh --docker --dangerous ${{ needs.build.outputs.snap }}
       - name: Build Flutter app
         run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
       - name: Run Flutter app
