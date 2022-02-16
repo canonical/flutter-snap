@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
-      # one at a time to avoid conflicts due to docker host mounts
-      max-parallel: 1
+      # few at a time to possibly reduce conflicts due to docker host mounts
+      max-parallel: 3
       matrix:
         image:
           - debian-stable
@@ -78,6 +78,7 @@ jobs:
         run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
       - name: Run Flutter app
         run: sudo ./.github/scripts/run-app.sh
+        timeout-minutes: 15
 
   cleanup:
     needs: [build, analyze, test]
