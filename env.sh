@@ -28,7 +28,7 @@ for d in ${CLANG_SEARCH_DIRS//:/$IFS}; do
     fi
 done
 SNAP_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-export LIBGL_DRIVERS_PATH=$SNAP_DRIVERS_PATH:$HOST_DRIVERS_PATH:$LIBGL_DRIVERS_PATH
+export LIBGL_DRIVERS_PATH=$HOST_DRIVERS_PATH:$SNAP_DRIVERS_PATH:$LIBGL_DRIVERS_PATH
 export LIBGL_ALWAYS_SOFTWARE=1
 
 # if any gdk-pixbuf variables are already set (e.g. from the VS Code snap), override them
