@@ -6,6 +6,7 @@ ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
+RUN dnf upgrade -y
 RUN dnf install -y fuse snapd squashfuse sudo
 RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL xorg-x11-server-Xvfb
 
