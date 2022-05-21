@@ -26,7 +26,7 @@ download_flutter () {
   url=$base_url/$archive
   echo "Downloading $url"
   curl -o latest_stable.tar.xz --user-agent 'Flutter SDK Snap' $url
-  tar xf latest_stable.tar.xz
+  tar xf latest_stable.tar.xz --no-same-owner
   [ -d "$SNAP_USER_COMMON/flutter/.git" ] && rm -f latest_stable.tar.xz releases_linux.json
   cd -
 }
