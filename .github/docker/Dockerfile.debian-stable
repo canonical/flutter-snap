@@ -7,6 +7,7 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
 RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y fuse init snapd squashfuse sudo
 
 RUN dpkg-divert --local --rename --add /sbin/udevadm

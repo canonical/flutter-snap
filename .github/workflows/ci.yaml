@@ -34,8 +34,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: snap
+      - name: Install snapd
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: sudo apt update && sudo apt install -y snapd
       - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }}
+        run: sudo ./.github/scripts/install-flutter.sh --dangerous ${{ needs.build.outputs.snap }}
       - name: Analyze Flutter snap
         # capture stderr, display stdout+stderr in the CI
         run: |
@@ -50,8 +54,8 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
-      # one at a time to avoid conflicts due to docker host mounts
-      max-parallel: 1
+      # few at a time to possibly reduce conflicts due to docker host mounts
+      max-parallel: 3
       matrix:
         image:
           - debian-stable
@@ -73,11 +77,12 @@ jobs:
         with:
           name: snap
       - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh ${{ needs.build.outputs.snap }} --docker
+        run: sudo ./.github/scripts/install-flutter.sh --docker --dangerous ${{ needs.build.outputs.snap }}
       - name: Build Flutter app
         run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
       - name: Run Flutter app
         run: sudo ./.github/scripts/run-app.sh
+        timeout-minutes: 15
 
   cleanup:
     needs: [build, analyze, test]
