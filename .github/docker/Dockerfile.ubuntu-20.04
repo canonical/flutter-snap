@@ -5,6 +5,7 @@ ENV container docker
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
+ENV SNAPPY_LAUNCHER_INSIDE_TESTS true
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
@@ -18,3 +19,7 @@ STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 xvfb
+
+# https://github.com/diddlesnaps/snapcraft-container/pull/17
+RUN dpkg-divert --local --rename --add /usr/bin/systemd-detect-virt
+ADD systemd-detect-virt /usr/bin/
