@@ -6,7 +6,8 @@ set -e
 
 DOCKERFILE=${1:?"Pass Dockerfile arg"}
 
-docker build -t snapimg -f $DOCKERFILE .
+cd $(dirname $DOCKERFILE)
+docker build -t snapimg -f $(basename $DOCKERFILE) .
 
 docker run \
     --name=snapc \
@@ -39,3 +40,5 @@ done
 echo " done"
 
 docker exec snapc snap install core --edge
+
+docker exec snapc mount -o rw,nosuid,nodev,noexec,relatime securityfs -t securityfs /sys/kernel/security || true
