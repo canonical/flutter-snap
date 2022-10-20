@@ -73,6 +73,7 @@ parts:
       - ninja-build
       - pkg-config
       - rsync
+      - tar
       - unzip
       - xz-utils
       - zlib1g
