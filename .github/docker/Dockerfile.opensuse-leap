@@ -9,7 +9,7 @@ ENV SNAPPY_LAUNCHER_INSIDE_TESTS true
 
 RUN zypper update -y
 RUN zypper install -y fuse squashfs sudo systemd-sysvinit
-RUN zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.3 snappy
+RUN zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.4 snappy
 RUN zypper --gpg-auto-import-keys refresh
 RUN zypper dup --from snappy
 RUN zypper install -y snapd
