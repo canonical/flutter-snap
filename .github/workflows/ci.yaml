@@ -59,13 +59,14 @@ jobs:
       matrix:
         image:
           - debian-stable
-          - fedora-35
           - fedora-36
+          - fedora-37
           - opensuse-leap
           - opensuse-tumbleweed
           - ubuntu-18.04
           - ubuntu-20.04
           - ubuntu-22.04
+          - ubuntu-23.04
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
