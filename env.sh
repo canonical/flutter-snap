@@ -24,10 +24,14 @@ HOST_DRIVERS_PATH=
 CLANG_SEARCH_DIRS=$(clang++ -print-search-dirs | awk -F = '/libraries: =/{print $NF}')
 for d in ${CLANG_SEARCH_DIRS//:/$IFS}; do
     if [ -d "$d/dri" ]; then
-        HOST_DRIVERS_PATH="$HOST_DRIVERS_PATH:$(realpath $d/dri)"
+        if [[ "$d" == /snap/flutter/* ]]; then
+            SNAP_DRIVERS_PATH="$SNAP_DRIVERS_PATH:$(realpath $d/dri)"
+        else
+            HOST_DRIVERS_PATH="$HOST_DRIVERS_PATH:$(realpath $d/dri)"
+        fi
     fi
 done
-SNAP_DRIVERS_PATH=$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
+SNAP_DRIVERS_PATH="$SNAP_DRIVERS_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri"
 export LIBGL_DRIVERS_PATH=$HOST_DRIVERS_PATH:$SNAP_DRIVERS_PATH:$LIBGL_DRIVERS_PATH
 export LIBGL_ALWAYS_SOFTWARE=1
 
