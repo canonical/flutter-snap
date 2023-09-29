@@ -1,5 +1,5 @@
 name: flutter
-base: core20
+base: core22
 version: git
 summary: Flutter
 description: |
@@ -66,7 +66,6 @@ parts:
       - libmount1
       - libpcre3
       - libselinux1
-      - libsepol1
       - libstdc++-10-dev
       - libstdc++6
       - libuuid1
@@ -86,15 +85,9 @@ parts:
       - -usr/lib/llvm-*/lib/clang/*/lib/linux/*i386*
       - -usr/share/doc
       - -usr/share/man
-      - -usr/include/c++/6*
-      - -usr/include/*/c++/6*
-      - -usr/include/c++/7*
-      - -usr/include/*/c++/7*
-      - -usr/include/c++/8*
-      - -usr/include/*/c++/8*
-      - -usr/lib/gcc/*/6
-      - -usr/lib/gcc/*/7
-      - -usr/lib/gcc/*/8
+      - -usr/include/c++/*
+      - -usr/include/*/c++/*
+      - -usr/lib/gcc/*/*
       - -usr/share/perl*
       - -usr/lib/*/perl*
       - -usr/share/cmake*/Help
