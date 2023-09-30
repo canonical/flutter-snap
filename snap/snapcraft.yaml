@@ -23,6 +23,8 @@ apps:
 
 parts:
   flutter:
+    build-attributes:
+      - enable-patchelf
     plugin: nil
     source: .
     override-build: |
@@ -98,6 +100,8 @@ parts:
 
   # Fix pkgconfig files
   pkgconfig:
+    build-attributes:
+      - enable-patchelf
     after: [flutter]
     plugin: nil
     override-prime: |
@@ -122,6 +126,8 @@ parts:
 
   # Fix linker files
   linker:
+    build-attributes:
+      - enable-patchelf
     after: [flutter]
     plugin: nil
     override-prime: |
