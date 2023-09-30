@@ -85,9 +85,9 @@ parts:
       - -usr/lib/llvm-*/lib/clang/*/lib/linux/*i386*
       - -usr/share/doc
       - -usr/share/man
-      - -usr/include/c++/*
-      - -usr/include/*/c++/*
-      - -usr/lib/gcc/*/*
+      - -usr/include/c++/10*
+      - -usr/include/*/c++/10*
+      - -usr/lib/gcc/*/10
       - -usr/share/perl*
       - -usr/lib/*/perl*
       - -usr/share/cmake*/Help
