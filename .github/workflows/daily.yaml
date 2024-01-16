@@ -15,8 +15,8 @@ jobs:
       matrix:
         image:
           - debian-stable
-          - fedora-36
           - fedora-37
+          - fedora-38
           - opensuse-leap
           - opensuse-tumbleweed
           - ubuntu-18.04
