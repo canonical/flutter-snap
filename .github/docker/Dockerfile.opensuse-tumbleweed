@@ -14,7 +14,7 @@ RUN zypper --gpg-auto-import-keys refresh
 RUN zypper dup --from snappy
 RUN zypper install -y snapd
 RUN zypper install -y gtk3 Mesa-libEGL1 xvfb-run
-RUN zypper install -y tar which
+RUN zypper install -y tar which gawk
 
 RUN ln -sf /bin/true /sbin/udevadm
 RUN ln -s /var/lib/snapd/snap /snap
