@@ -50,6 +50,8 @@ parts:
       - libexpat1
       - libffi7
       - libfontconfig1
+      - libjsoncpp1
+      - libjsoncpp-dev
       - libgcc-s1
       - libgcrypt20
       - libgcrypt20-dev
@@ -65,6 +67,8 @@ parts:
       - liblzma-dev
       - libmount1
       - libpcre3
+      - libsecret-1-0
+      - libsecret-1-dev
       - libselinux1
       - libsepol1
       - libstdc++-10-dev
