@@ -1,5 +1,5 @@
 name: flutter
-base: core20
+base: core22
 version: git
 summary: Flutter
 description: |
@@ -23,6 +23,8 @@ apps:
 
 parts:
   flutter:
+    build-attributes:
+      - enable-patchelf
     plugin: nil
     source: .
     override-build: |
@@ -70,7 +72,6 @@ parts:
       - libsecret-1-0
       - libsecret-1-dev
       - libselinux1
-      - libsepol1
       - libstdc++-10-dev
       - libstdc++6
       - libuuid1
@@ -90,15 +91,9 @@ parts:
       - -usr/lib/llvm-*/lib/clang/*/lib/linux/*i386*
       - -usr/share/doc
       - -usr/share/man
-      - -usr/include/c++/6*
-      - -usr/include/*/c++/6*
-      - -usr/include/c++/7*
-      - -usr/include/*/c++/7*
-      - -usr/include/c++/8*
-      - -usr/include/*/c++/8*
-      - -usr/lib/gcc/*/6
-      - -usr/lib/gcc/*/7
-      - -usr/lib/gcc/*/8
+      - -usr/include/c++/10*
+      - -usr/include/*/c++/10*
+      - -usr/lib/gcc/*/10
       - -usr/share/perl*
       - -usr/lib/*/perl*
       - -usr/share/cmake*/Help
@@ -109,6 +104,8 @@ parts:
 
   # Fix pkgconfig files
   pkgconfig:
+    build-attributes:
+      - enable-patchelf
     after: [flutter]
     plugin: nil
     override-prime: |
@@ -133,6 +130,8 @@ parts:
 
   # Fix linker files
   linker:
+    build-attributes:
+      - enable-patchelf
     after: [flutter]
     plugin: nil
     override-prime: |

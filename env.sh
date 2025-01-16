@@ -1,21 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SNAPCRAFT_ARCH_TRIPLET=<SNAPCRAFT_ARCH_TRIPLET>
 
 SNAP=/snap/flutter/current
 SNAP_USER_COMMON=$HOME/snap/flutter/common
 SNAP_USER_DATA=$HOME/snap/flutter/current
+CPLUS_VERSION=11
 
 export PATH=$SNAP/usr/bin:$SNAP/bin:$SNAP_USER_COMMON/flutter/bin:$PATH
 export GIT_EXEC_PATH=$SNAP/usr/lib/git-core
 export GIT_CONFIG_NOSYSTEM=1
-export CURL_CA_BUNDLE=/snap/core20/current/etc/ssl/certs/ca-certificates.crt
-export GIT_SSL_CAINFO=/snap/core20/current/etc/ssl/certs/ca-certificates.crt
-export CPLUS_INCLUDE_PATH=$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET/c++/9:$SNAP/usr/include/c++/9:$SNAP/usr/include:$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/include/c++/9
-export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib
+export CURL_CA_BUNDLE=/snap/core22/current/etc/ssl/certs/ca-certificates.crt
+export GIT_SSL_CAINFO=/snap/core22/current/etc/ssl/certs/ca-certificates.crt
+export CPLUS_INCLUDE_PATH=$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET/c++/$CPLUS_VERSION:$SNAP/usr/include/c++/$CPLUS_VERSION:$SNAP/usr/include:$SNAP/usr/include/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/include/c++/$CPLUS_VERSION
+export LIBRARY_PATH=$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/$CPLUS_VERSION:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib
+export LDFLAGS="-Wl,-dynamic-linker=/snap/core22/current/lib64/ld-linux-x86-64.so.2 $LDFLAGS"
+export LDFLAGS="-Wl,-rpath=/snap/core22/current/lib/x86_64-linux-gnu $LDFLAGS"
 export LDFLAGS="-lblkid -lgcrypt -llzma -llz4 -lgpg-error -luuid -lpthread -ldl -lepoxy -lfontconfig $LDFLAGS"
-export LDFLAGS="-L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9 -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/ $LDFLAGS"
-export LDFLAGS="-B$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/9 -B$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/usr/lib/ $LDFLAGS"
+export LDFLAGS="-L$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/$CPLUS_VERSION -L$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -L$SNAP/usr/lib/ $LDFLAGS"
+export LDFLAGS="-B$SNAP/usr/lib/gcc/$SNAPCRAFT_ARCH_TRIPLET/$CPLUS_VERSION -B$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET -B$SNAP/usr/lib/ $LDFLAGS"
 export PKG_CONFIG_PATH=$SNAP/usr/lib/pkgconfig:$SNAP/usr/share/pkgconfig:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$PKG_CONFIG_PATH:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig
 
 # find the location of DRI drivers on the host (e.g. /usr/lib/<triplet>/dri, /usr/lib64/dri, /lib64/dri, ...)
