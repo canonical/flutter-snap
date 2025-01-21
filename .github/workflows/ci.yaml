@@ -31,7 +31,7 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
       - name: Download Flutter snap
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: snap
       - name: Install snapd
@@ -59,22 +59,21 @@ jobs:
       matrix:
         image:
           - debian-stable
-          - fedora-37
-          - fedora-38
+          - fedora-41
           - opensuse-leap
           - opensuse-tumbleweed
           - ubuntu-18.04
           - ubuntu-20.04
           - ubuntu-22.04
-          - ubuntu-23.04
-          - ubuntu-23.10
+          - ubuntu-24.04
+          - ubuntu-24.10
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
       - name: Build image
         run: sudo ./.github/scripts/build-image.sh ./.github/docker/Dockerfile.${{ matrix.image }}
       - name: Download Flutter snap
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: snap
       - name: Install Flutter snap
