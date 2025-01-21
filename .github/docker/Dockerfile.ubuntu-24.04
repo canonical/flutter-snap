@@ -1,5 +1,5 @@
 # based on https://github.com/ogra1/snapd-docker
-FROM fedora:37
+FROM ubuntu:noble
 
 ENV container docker
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
@@ -7,16 +7,19 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 ENV SNAPPY_LAUNCHER_INSIDE_TESTS true
 
-RUN dnf upgrade -y
-RUN dnf install -y fuse snapd squashfuse sudo
-RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL xorg-x11-server-Xvfb
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y fuse init snapd squashfuse sudo
 
-RUN ln -sf /bin/true /sbin/udevadm
-RUN ln -s /var/lib/snapd/snap /snap
+RUN dpkg-divert --local --rename --add /sbin/udevadm
+RUN ln -s /bin/true /sbin/udevadm
 RUN systemctl enable snapd snapd.seeded
 VOLUME ["/sys/fs/cgroup"]
 STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 xvfb
+
 # https://github.com/diddlesnaps/snapcraft-container/pull/17
+RUN dpkg-divert --local --rename --add /usr/bin/systemd-detect-virt
 ADD systemd-detect-virt /usr/bin/

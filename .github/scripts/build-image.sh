@@ -25,7 +25,7 @@ docker run \
     -d snapimg
 
 # wait for snapd to start
-TIMEOUT=100
+TIMEOUT=600
 SLEEP=0.1
 echo -n "Waiting up to $(($TIMEOUT/10)) seconds for snapd startup "
 while [ "$(docker exec snapc sh -c 'systemctl status snapd.seeded >/dev/null 2>&1; echo $?')" != "0" ]; do
