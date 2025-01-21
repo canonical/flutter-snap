@@ -1,5 +1,5 @@
 # based on https://github.com/ogra1/snapd-docker
-FROM fedora:38
+FROM fedora:41
 
 ENV container docker
 ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
