@@ -7,7 +7,7 @@ on:
 
 jobs:
   candidate:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       # few at a time to possibly reduce conflicts due to docker host mounts
