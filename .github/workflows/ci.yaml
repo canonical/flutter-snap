@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
 
   analyze:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       # few at a time to possibly reduce conflicts due to docker host mounts
@@ -87,7 +87,7 @@ jobs:
   cleanup:
     needs: [build, analyze, test]
     if: ${{ always() &&  github.event_name != 'workflow_dispatch' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Delete Flutter snap
         uses: geekyeggo/delete-artifact@v1
