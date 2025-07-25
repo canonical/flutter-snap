@@ -1,11 +1,11 @@
 # based on https://github.com/ogra1/snapd-docker
 FROM ubuntu:noble
 
-ENV container docker
-ENV PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV SNAPPY_LAUNCHER_INSIDE_TESTS true
+ENV container=docker
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV SNAPPY_LAUNCHER_INSIDE_TESTS=true
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
