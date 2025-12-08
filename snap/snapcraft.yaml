@@ -15,9 +15,7 @@ architectures:
 apps:
   flutter:
     command: flutter.sh
-  openurl:
-    command: openurl.sh
-    desktop: flutter.desktop
+
   dart:
     command: dart.sh
 
@@ -29,8 +27,6 @@ parts:
       cp dart.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
       cp env.sh $SNAPCRAFT_PART_INSTALL/
-      cp openurl.sh $SNAPCRAFT_PART_INSTALL/
-      cp flutter.desktop $SNAPCRAFT_PART_INSTALL/
 
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
       sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' $ENV_SH
