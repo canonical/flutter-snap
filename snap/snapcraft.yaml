@@ -1,6 +1,6 @@
 name: flutter
 base: core24
-version: git
+version: "3.38.9"
 summary: Flutter
 title: Flutter
 license: BSD-3-Clause
@@ -38,6 +38,7 @@ parts:
 
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
       sed -i 's#<CRAFT_ARCH_TRIPLET_BUILD_FOR>#$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $ENV_SH
+      sed -i 's#<SNAPCRAFT_PROJECT_VERSION>#$SNAPCRAFT_PROJECT_VERSION#' $ENV_SH
     stage-packages:
       - clang
       - cmake

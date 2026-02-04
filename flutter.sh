@@ -11,29 +11,15 @@ reset_install () {
   download_flutter
 }
 
-# Download stable via tarball
-download_flutter () {
-  # Determine URL for latest stable release
-  if [ -z $FLUTTER_STORAGE_BASE_URL ]; then
-    export FLUTTER_STORAGE_BASE_URL=https://storage.googleapis.com
-  fi
-  mkdir -p $SNAP_USER_COMMON
-  cd $SNAP_USER_COMMON
-  curl -o releases_linux.json $FLUTTER_STORAGE_BASE_URL/flutter_infra_release/releases/releases_linux.json
-  base_url=$(cat releases_linux.json | jq -r '.base_url')
-  stable=$(cat releases_linux.json | jq -r '.current_release' | jq '.stable')
-  archive=$(cat releases_linux.json | jq -r --arg stable "$stable" '[.releases[] | select(.hash=='$stable')][0].archive')
-  url=$base_url/$archive
-  echo "Downloading $url"
-  curl -o latest_stable.tar.xz --user-agent 'Flutter SDK Snap' $url
-  tar xf latest_stable.tar.xz --no-same-owner
-  [ -d "$SNAP_USER_COMMON/flutter/.git" ] && rm -f latest_stable.tar.xz releases_linux.json
-  cd ~-
-}
-
 # Download stable via git
 download_flutter_git () {
-    git clone https://github.com/flutter/flutter.git -b master $SNAP_USER_COMMON/flutter
+    git -c "advice.detachedHead=false" clone https://github.com/flutter/flutter.git --single-branch -b $SNAPCRAFT_PROJECT_VERSION "$SNAP_USER_COMMON/flutter"
+    
+    # Make a specific branch for current stable release, tracking origin/stable
+    git -C "$SNAP_USER_COMMON/flutter"  checkout -b $SNAPCRAFT_PROJECT_VERSION
+    git -C "$SNAP_USER_COMMON/flutter" fetch origin stable:refs/remotes/origin/stable
+    git -C "$SNAP_USER_COMMON/flutter" remote set-branches --add origin stable
+    git -C "$SNAP_USER_COMMON/flutter" branch -u origin/stable $SNAPCRAFT_PROJECT_VERSION
 }
 
 if [ "$1" == "version" ]; then
@@ -47,20 +33,26 @@ if [ "$1" == "--reset" ]; then
 fi
 
 if [ ! -d "$SNAP_USER_COMMON/flutter/.git" ]; then
-    echo "Initializing Flutter"
-    if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" == "aarch64-linux-gnu" ]; then
-        download_flutter_git
-    else
-        download_flutter
-    fi
+    echo "Initializing Flutter..."
+    download_flutter_git
+
     if [ -x $FLUTTER ]; then
-      echo "Flutter initialized"
+      echo "Flutter downloaded."
+      
+      $FLUTTER --version
+
+      # Update stamp to let Flutter know we are on stable channel 
+      jq '.channel = "stable" | .repositoryUrl = "https://github.com/flutter/flutter.git"' "$SNAP_USER_COMMON/flutter/bin/cache/flutter.version.json" > "$SNAP_USER_COMMON/flutter.version.json"
+      cp "$SNAP_USER_COMMON/flutter.version.json" "$SNAP_USER_COMMON/flutter/bin/cache/flutter.version.json"
+
+      echo "Flutter initialized."
+
       $FLUTTER --version
       if [ "$#" -eq 0 ]; then
         exit
       fi
     else
-      echo "Flutter initialization failed"
+      echo "Flutter initialization failed."
     fi
 fi
 
