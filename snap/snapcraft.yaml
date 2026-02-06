@@ -1,16 +1,20 @@
 name: flutter
-base: core20
+base: core24
 version: git
 summary: Flutter
+title: Flutter
+license: BSD-3-Clause
+source-code: https://github.com/flutter/flutter
+website: https://flutter.dev/
 description: |
   Flutter is Google’s UI toolkit for building beautiful, natively compiled
   applications for mobile, web, and desktop from a single codebase.
 
 grade: stable
 confinement: classic
-architectures:
-  - build-on: amd64
-  - build-on: arm64
+platforms:
+  amd64:
+  arm64:
 
 apps:
   flutter:
@@ -33,7 +37,7 @@ parts:
       cp flutter.desktop $SNAPCRAFT_PART_INSTALL/
 
       ENV_SH=$SNAPCRAFT_PART_INSTALL/env.sh
-      sed -i 's#<SNAPCRAFT_ARCH_TRIPLET>#$SNAPCRAFT_ARCH_TRIPLET#' $ENV_SH
+      sed -i 's#<CRAFT_ARCH_TRIPLET_BUILD_FOR>#$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $ENV_SH
     stage-packages:
       - clang
       - cmake
@@ -48,9 +52,9 @@ parts:
       - libcrypt1
       - libdbus-1-3
       - libexpat1
-      - libffi7
+      - libffi8
       - libfontconfig1
-      - libjsoncpp1
+      - libjsoncpp25
       - libjsoncpp-dev
       - libgcc-s1
       - libgcrypt20
@@ -70,7 +74,7 @@ parts:
       - libsecret-1-0
       - libsecret-1-dev
       - libselinux1
-      - libsepol1
+      - libsepol2
       - libstdc++-10-dev
       - libstdc++6
       - libuuid1
@@ -105,8 +109,9 @@ parts:
       - -usr/share/icons
       - -usr/share/pixmaps
       - -usr/share/rsync
-
-
+    build-attributes:
+      - enable-patchelf
+  
   # Fix pkgconfig files
   pkgconfig:
     after: [flutter]
@@ -140,11 +145,94 @@ parts:
 
       find . -type l -name "*.so*" -exec bash -c 'if [[ $(readlink $1) == /* ]] && [[ $(readlink $1) != /snap* ]]; then ln -sf /snap/flutter/current$(readlink $1) $1; fi' bash {} \;
 
-      for so in usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libc.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpthread.so usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libm.so
+      for so in usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc.so usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpthread.so usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libm.so
       do
         if [ -f $SNAPCRAFT_PRIME/$so ]; then
           sed -i "$SNAPCRAFT_PRIME/${so}" \
-              -e "s# /lib/$SNAPCRAFT_ARCH_TRIPLET# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/$SNAPCRAFT_ARCH_TRIPLET#g" \
-              -e "s# \(/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
+              -e "s# /lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR# /snap/$SNAPCRAFT_PROJECT_NAME/current/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#g" \
+              -e "s# \(/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/.*\)# /snap/$SNAPCRAFT_PROJECT_NAME/current\1#g"
         fi
       done
+
+lint:
+  ignore:
+    - library:
+      - usr/lib/llvm-18/lib/libLTO.so.18.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libBrokenLocale.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libEGL.so.1.1.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libEGL_mesa.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGL.so.1.7.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLESv1_CM.so.1.2.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLESv2.so.2.1.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLU.so.1.3.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLX_mesa.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libSM.so.6.0.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libXtst.so.6.1.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libanl.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libasan.so.6.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libasan.so.8.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libatomic.so.1.2.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libcairo-script-interpreter.so.2.11800.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libclang-18.so.18
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libcolordprivate.so.2.0.5
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libdconf.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libdl.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libexpatw.so.1.9.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgccpp.so.1.5.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgctba.so.1.5.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgdbm_compat.so.4.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgomp.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libharfbuzz-cairo.so.0.60830.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libharfbuzz-gobject.so.0.60830.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libharfbuzz-icu.so.0.60830.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libharfbuzz-subset.so.0.60830.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libhwasan.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libicutest.so.74.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libitm.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/liblsan.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libmemusage.so
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libmvec.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libnsl.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libnss_compat.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libnss_dns.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libnss_files.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libnss_hesiod.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libobjc.so.4.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libobjc_gc.so.4.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcprofile.so
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcre2-16.so.0.11.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcre2-32.so.0.11.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcre2-posix.so.3.0.4
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcreposix.so.3.13.3
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpthread.so.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libquadmath.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/librt.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libsecret-1.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libsepol.so.2
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libthread_db.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libtiffxx.so.6.0.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libtsan.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libtsan.so.2.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libubsan.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libutil.so.1
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libva.so.2.2000.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libvulkan.so.1.3.275
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libwayland-server.so.0.22.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libwebpdecoder.so.3.1.8
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libwebpdemux.so.2.0.14
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libwebpmux.so.3.0.13
+      - lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libpcre.so.3.13.3
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLX.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libICE.so.6.3.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libOpenGL.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libXxf86vm.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgc.so.1.5.3
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgdbm.so.6.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libuuid.so.1.3.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libxcb-glx.so.0.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libGLdispatch.so.0.0.0
+    - metadata:
+      - contact
+      - donation
+      - issues
