@@ -48,7 +48,7 @@ fi
 
 if [ ! -d "$SNAP_USER_COMMON/flutter/.git" ]; then
     echo "Initializing Flutter"
-    if [ "$SNAPCRAFT_ARCH_TRIPLET" == "aarch64-linux-gnu" ]; then
+    if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" == "aarch64-linux-gnu" ]; then
         download_flutter_git
     else
         download_flutter
