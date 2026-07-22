@@ -18,6 +18,7 @@ docker run \
     --cap-add SYS_ADMIN \
     --device=/dev/fuse \
     --privileged \
+    --cgroupns=host \
     --security-opt apparmor:unconfined \
     --security-opt seccomp:unconfined \
     -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
@@ -33,6 +34,10 @@ while [ "$(docker exec snapc sh -c 'systemctl status snapd.seeded >/dev/null 2>&
     sleep $SLEEP || exit 1
     if [ "$TIMEOUT" -le "0" ]; then
         echo " Timed out!"
+        echo "Container status:"
+        docker ps -a --filter name=snapc
+        echo "Container logs:"
+        docker logs snapc || true
         exit 1
     fi
     TIMEOUT=$(($TIMEOUT-1))

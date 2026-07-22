@@ -9,7 +9,7 @@ ENV SNAPPY_LAUNCHER_INSIDE_TESTS=true
 
 RUN dnf upgrade -y
 RUN dnf install -y fuse snapd squashfuse sudo
-RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL xorg-x11-server-Xvfb
+RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL mesa-libGLES xorg-x11-server-Xvfb
 
 RUN ln -sf /bin/true /sbin/udevadm
 RUN ln -s /var/lib/snapd/snap /snap

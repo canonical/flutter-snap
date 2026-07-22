@@ -18,7 +18,7 @@ VOLUME ["/sys/fs/cgroup"]
 STOPSIGNAL SIGRTMIN+3
 CMD ["/sbin/init"]
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 xvfb
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 libgles2 xvfb
 
 # https://github.com/diddlesnaps/snapcraft-container/pull/17
 RUN dpkg-divert --local --rename --add /usr/bin/systemd-detect-virt
