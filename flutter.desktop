@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Flutter SDK
-Comment=Flutter is Google’s UI toolkit for building beautiful, natively compiled applications for mobile, web, and desktop from a single codebase.
+Comment=Flutter is an open source framework for building beautiful, natively compiled, multi-platform applications from a single codebase.
 Icon=${SNAP}/meta/gui/flutter.png
 Exec=${SNAP}/openurl.sh
 Terminal=false
