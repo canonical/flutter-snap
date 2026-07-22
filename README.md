@@ -1,5 +1,7 @@
 # Flutter Snap
 
+[![Get it from the Snap Store](https://snapcraft.io/en/dark/install.svg)](https://snapcraft.io/flutter)
+
 This repository contains the packaging used to build the [Flutter](https://flutter.dev/)
 snap published in the [Snap Store](https://snapcraft.io/flutter).
 
