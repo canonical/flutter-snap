@@ -11,6 +11,9 @@ export GIT_EXEC_PATH=$SNAP/usr/lib/git-core
 export GIT_CONFIG_NOSYSTEM=1
 export CURL_CA_BUNDLE=/snap/core22/current/etc/ssl/certs/ca-certificates.crt
 export GIT_SSL_CAINFO=/snap/core22/current/etc/ssl/certs/ca-certificates.crt
+# Load GIO modules from the snap so we don't pick up host modules built
+# against a newer glibc than the one the snap ships.
+export GIO_MODULE_DIR=$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/gio/modules
 export CPLUS_INCLUDE_PATH=$SNAP/usr/include/$CRAFT_ARCH_TRIPLET/c++/10:$SNAP/usr/include/c++/10:$SNAP/usr/include:$SNAP/usr/include/$CRAFT_ARCH_TRIPLET:$SNAP/usr/include/c++/10
 export LIBRARY_PATH=$SNAP/usr/lib/gcc/$CRAFT_ARCH_TRIPLET/10:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib
 # Point the linker at the snap's own libraries so builds link against them
