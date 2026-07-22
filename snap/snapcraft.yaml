@@ -1,14 +1,17 @@
 name: flutter
 base: core22
 version: git
-summary: Flutter
+summary: The Flutter SDK and tools for building multi-platform apps
 title: Flutter
 license: BSD-3-Clause
 source-code: https://github.com/flutter/flutter
 website: https://flutter.dev/
 description: |
-  Flutter is Google’s UI toolkit for building beautiful, natively compiled
-  applications for mobile, web, and desktop from a single codebase.
+  Flutter is an open source framework for building beautiful, natively
+  compiled, multi-platform applications from a single codebase.
+
+  This snap packages the Flutter SDK and command-line tools, giving you
+  everything needed to create, build, and run Flutter applications on Linux.
 
 grade: stable
 confinement: classic
