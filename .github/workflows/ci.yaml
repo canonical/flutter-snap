@@ -89,6 +89,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete Flutter snap
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: snap
