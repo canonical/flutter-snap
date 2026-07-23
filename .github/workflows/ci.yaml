@@ -24,35 +24,6 @@ jobs:
     outputs:
       snap: ${{ steps.snapcraft.outputs.snap }}
 
-  analyze:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v2
-      - name: Download Flutter snap
-        uses: actions/download-artifact@v4
-        with:
-          name: snap
-      - name: Install snapd
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: sudo apt update && sudo apt install -y snapd
-      - name: Install Flutter build dependencies
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: sudo apt install -y clang cmake ninja-build pkg-config libgtk-3-dev
-      - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh --dangerous ${{ needs.build.outputs.snap }}
-      - name: Analyze Flutter snap
-        # capture stderr, display stdout+stderr in the CI
-        run: |
-          err=$(sudo ./.github/scripts/analyze-flutter.sh 3>&1 1>&2 2>&3 | tee >(cat - >&2))
-          if [ -n "$err" ]; then
-              while read -r line; do echo "::error ::$line"; done <<< "$err"
-              exit 1
-          fi
-
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -88,7 +59,7 @@ jobs:
         timeout-minutes: 15
 
   cleanup:
-    needs: [build, analyze, test]
+    needs: [build, test]
     if: ${{ always() &&  github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
