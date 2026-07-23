@@ -9,7 +9,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runs-on: ubuntu-latest
+          - arch: arm64
+            # TODO: switch to ubuntu-26.04-arm once it is out of public preview
+            runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -19,19 +28,19 @@ jobs:
       - name: Upload Flutter snap
         uses: actions/upload-artifact@v4
         with:
-          name: snap
+          name: snap-${{ matrix.arch }}
           path: ${{ steps.snapcraft.outputs.snap }}
-    outputs:
-      snap: ${{ steps.snapcraft.outputs.snap }}
 
   test:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
       # few at a time to possibly reduce conflicts due to docker host mounts
       max-parallel: 3
       matrix:
+        arch:
+          - amd64
         image:
           - debian-stable
           - fedora-42
@@ -41,6 +50,17 @@ jobs:
           - ubuntu-24.04
           - ubuntu-25.10
           - ubuntu-26.04
+        include:
+          - arch: amd64
+            runs-on: ubuntu-latest
+          # A single ARM test is enough to catch arch-specific regressions.
+          # The ubuntu-26.04-arm runner is still in public preview, so run the
+          # ubuntu-26.04 image on a 24.04 runner for now.
+          # TODO: switch to the ubuntu-26.04-arm runner once it is out of
+          # public preview.
+          - arch: arm64
+            image: ubuntu-26.04
+            runs-on: ubuntu-24.04-arm
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -49,9 +69,9 @@ jobs:
       - name: Download Flutter snap
         uses: actions/download-artifact@v4
         with:
-          name: snap
+          name: snap-${{ matrix.arch }}
       - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh --docker --dangerous ${{ needs.build.outputs.snap }}
+        run: sudo ./.github/scripts/install-flutter.sh --docker --dangerous "$(ls *.snap)"
       - name: Build Flutter app
         run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
       - name: Run Flutter app
@@ -66,4 +86,6 @@ jobs:
       - name: Delete Flutter snap
         uses: geekyeggo/delete-artifact@v6
         with:
-          name: snap
+          name: |
+            snap-amd64
+            snap-arm64
