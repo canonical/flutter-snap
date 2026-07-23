@@ -4,8 +4,8 @@
 SNAP=/snap/flutter/current
 SNAP_USER_COMMON=$HOME/snap/flutter/common
 
-# The core22 base snap, providing CA certificates.
-CORE=/snap/core22/current
+# The core26 base snap, providing CA certificates.
+CORE=/snap/core26/current
 
 # Run the snap's bootstrap tools and the Flutter SDK before the host's.
 # Building Linux apps uses the host's toolchain (clang, cmake, ninja,
