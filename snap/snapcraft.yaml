@@ -43,6 +43,7 @@ parts:
       sed -i 's#<CRAFT_ARCH_TRIPLET>#$CRAFT_ARCH_TRIPLET#' $ENV_SH
     stage-packages:
       - clang
+      - llvm
       - cmake
       - curl
       - git
