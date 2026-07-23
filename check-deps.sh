@@ -35,11 +35,11 @@ check_flutter_linux_deps () {
     local cmd=""
     case " $id $like " in
         *" ubuntu "*|*" debian "*)
-            cmd="sudo apt install clang cmake ninja-build pkg-config libgtk-3-dev" ;;
+            cmd="sudo apt install clang cmake ninja-build g++ pkg-config libgtk-3-dev" ;;
         *" fedora "*|*" rhel "*|*" centos "*)
             cmd="sudo dnf install clang cmake ninja-build pkgconf-pkg-config gtk3-devel" ;;
         *" opensuse "*|*" suse "*)
-            cmd="sudo zypper install clang cmake ninja pkg-config gtk3-devel" ;;
+            cmd="sudo zypper install clang cmake ninja gcc-c++ pkg-config gtk3-devel" ;;
         *" arch "*)
             cmd="sudo pacman -S --needed clang cmake ninja pkg-config gtk3" ;;
     esac
