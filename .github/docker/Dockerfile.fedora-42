@@ -11,6 +11,9 @@ RUN dnf upgrade -y
 RUN dnf install -y fuse snapd squashfuse sudo
 RUN dnf install -y gtk3 mesa-dri-drivers mesa-libEGL mesa-libGLES xorg-x11-server-Xvfb
 
+# Flutter's Linux build toolchain, which the snap no longer bundles.
+RUN dnf install -y clang cmake ninja-build pkgconf-pkg-config gtk3-devel
+
 RUN ln -sf /bin/true /sbin/udevadm
 RUN ln -s /var/lib/snapd/snap /snap
 RUN systemctl enable snapd snapd.seeded
