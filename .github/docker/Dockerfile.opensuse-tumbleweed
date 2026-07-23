@@ -16,7 +16,9 @@ RUN zypper install -y snapd
 RUN zypper install -y gtk3 Mesa-libEGL1 Mesa-libGLESv2-2 xvfb-run
 
 # Flutter's Linux build toolchain, which the snap no longer bundles.
-RUN zypper install -y clang cmake ninja pkg-config gtk3-devel
+# clang on openSUSE needs the GCC C++ toolchain (linker, crt objects and
+# libstdc++), so install gcc-c++ too.
+RUN zypper install -y clang cmake ninja gcc-c++ pkg-config gtk3-devel
 RUN zypper install -y tar which gawk
 
 RUN ln -sf /bin/true /sbin/udevadm
