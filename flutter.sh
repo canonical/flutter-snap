@@ -69,6 +69,16 @@ if [ ! -x $FLUTTER ]; then
     exit
 fi
 
+# Warn if the host tools needed to build Linux apps are missing.
+case "$1" in
+  run|test) NEEDS_LINUX_TOOLCHAIN=1 ;;
+  build) [ "$2" == "linux" ] && NEEDS_LINUX_TOOLCHAIN=1 ;;
+esac
+if [ "$NEEDS_LINUX_TOOLCHAIN" == "1" ]; then
+  . $SCRIPT_DIR/check-deps.sh
+  check_flutter_linux_deps || true
+fi
+
 if [ "$1" == "sdk-path" ]; then
   echo $SNAP_USER_COMMON/flutter
 elif [ "$1" == "upgrade" ]; then

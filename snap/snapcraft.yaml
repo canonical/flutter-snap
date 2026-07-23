@@ -35,6 +35,7 @@ parts:
     override-build: |
       cp dart.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
+      cp check-deps.sh $SNAPCRAFT_PART_INSTALL/
       cp env.sh $SNAPCRAFT_PART_INSTALL/
       cp openurl.sh $SNAPCRAFT_PART_INSTALL/
       cp flutter.desktop $SNAPCRAFT_PART_INSTALL/
