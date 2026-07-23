@@ -33,7 +33,7 @@ download_flutter () {
 
 # Download stable via git
 download_flutter_git () {
-    git clone https://github.com/flutter/flutter.git -b master $SNAP_USER_COMMON/flutter
+    git clone https://github.com/flutter/flutter.git -b stable $SNAP_USER_COMMON/flutter
 }
 
 if [ "$1" == "version" ]; then
