@@ -20,6 +20,9 @@ CMD ["/sbin/init"]
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libgtk-3-0 libegl1 libgles2 xvfb
 
+# Flutter's Linux build toolchain, which the snap no longer bundles.
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+
 # https://github.com/diddlesnaps/snapcraft-container/pull/17
 RUN dpkg-divert --local --rename --add /usr/bin/systemd-detect-virt
 ADD systemd-detect-virt /usr/bin/

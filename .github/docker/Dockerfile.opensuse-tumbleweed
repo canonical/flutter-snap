@@ -14,6 +14,9 @@ RUN zypper --gpg-auto-import-keys refresh
 RUN zypper dup --from snappy
 RUN zypper install -y snapd
 RUN zypper install -y gtk3 Mesa-libEGL1 Mesa-libGLESv2-2 xvfb-run
+
+# Flutter's Linux build toolchain, which the snap no longer bundles.
+RUN zypper install -y clang cmake ninja pkg-config gtk3-devel
 RUN zypper install -y tar which gawk
 
 RUN ln -sf /bin/true /sbin/udevadm
