@@ -9,11 +9,14 @@ snap published in the [Snap Store](https://snapcraft.io/flutter).
 beautiful, natively compiled, multi-platform applications from a single
 codebase.
 
-The snap provides the `flutter` and `dart` command line tools, bundled together
-with the libraries and build tools (such as `clang`, `cmake`, `ninja`,
-`pkg-config` and the GTK development headers) needed to build Linux desktop
-applications. On first use the snap downloads the latest stable Flutter SDK into
-your home directory so it can be upgraded independently of the snap itself.
+The snap provides the `flutter` and `dart` command line tools. On first use the
+snap downloads the latest stable Flutter SDK into your home directory so it can
+be upgraded independently of the snap itself.
+
+Building Linux desktop applications relies on a build toolchain that is not
+bundled in the snap and must be installed on your system. The snap checks for
+these tools and, if any are missing, prints how to install them for your
+distribution.
 
 ## Installation
 
@@ -24,7 +27,8 @@ sudo snap install flutter --classic
 ```
 
 The snap uses [classic confinement](https://snapcraft.io/docs/classic-confinement)
-so that Flutter can access the toolchain and files needed to build applications.
+so that Flutter can use the host's build toolchain and access the files needed
+to build applications.
 
 ## Usage
 
