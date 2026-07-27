@@ -71,7 +71,10 @@ fi
 if [ ! -d "$SNAP_USER_COMMON/flutter/.git" ]; then
     echo "Initializing Flutter"
     init_failed=
-    if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" == "aarch64-linux-gnu" ]; then
+    # Flutter only publishes prebuilt SDK tarballs for x86_64, so fetch the SDK
+    # via git on other architectures (e.g. arm64). Detect the running
+    # architecture at runtime rather than relying on build-time variables.
+    if [ "$(uname -m)" == "aarch64" ]; then
         download_flutter_git || init_failed=1
     else
         download_flutter || init_failed=1
