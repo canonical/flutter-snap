@@ -8,6 +8,14 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: shellcheck -x *.sh .github/scripts/*.sh
+
   build:
     strategy:
       fail-fast: false
@@ -21,7 +29,7 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build Flutter snap
         uses: snapcore/action-build@v1
         id: snapcraft
@@ -63,7 +71,7 @@ jobs:
             runs-on: ubuntu-24.04-arm
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build image
         run: sudo ./.github/scripts/build-image.sh ./.github/docker/Dockerfile.${{ matrix.image }}
       - name: Download Flutter snap
