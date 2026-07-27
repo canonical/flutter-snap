@@ -4,7 +4,7 @@ set -e
 
 WORKSPACE=${1:?"Pass workspace arg"}
 
-docker cp $WORKSPACE snapc:/workspace
+docker cp "$WORKSPACE" snapc:/workspace
 
 docker exec \
     -w /workspace \

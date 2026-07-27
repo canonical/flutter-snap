@@ -6,8 +6,8 @@ set -e
 
 DOCKERFILE=${1:?"Pass Dockerfile arg"}
 
-cd $(dirname $DOCKERFILE)
-docker build -t snapimg -f $(basename $DOCKERFILE) .
+cd "$(dirname "$DOCKERFILE")"
+docker build -t snapimg -f "$(basename "$DOCKERFILE")" .
 
 docker run \
     --name=snapc \
@@ -28,10 +28,10 @@ docker run \
 # wait for snapd to start
 TIMEOUT=600
 SLEEP=0.1
-echo -n "Waiting up to $(($TIMEOUT/10)) seconds for snapd startup "
+echo "Waiting up to $((TIMEOUT/10)) seconds for snapd startup "
 while [ "$(docker exec snapc sh -c 'systemctl status snapd.seeded >/dev/null 2>&1; echo $?')" != "0" ]; do
-    echo -n "."
-    sleep $SLEEP || exit 1
+    printf '.'
+    sleep "$SLEEP" || exit 1
     if [ "$TIMEOUT" -le "0" ]; then
         echo " Timed out!"
         echo "Container status:"
@@ -40,7 +40,7 @@ while [ "$(docker exec snapc sh -c 'systemctl status snapd.seeded >/dev/null 2>&
         docker logs snapc || true
         exit 1
     fi
-    TIMEOUT=$(($TIMEOUT-1))
+    TIMEOUT=$((TIMEOUT-1))
 done
 echo " done"
 

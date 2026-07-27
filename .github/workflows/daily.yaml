@@ -37,7 +37,7 @@ jobs:
             runs-on: ubuntu-24.04-arm
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build image
         run: sudo ./.github/scripts/build-image.sh ./.github/docker/Dockerfile.${{ matrix.image }}
       - name: Install Flutter snap

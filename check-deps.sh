@@ -28,7 +28,9 @@ check_flutter_linux_deps () {
     # Identify the distribution to suggest an install command.
     local id="" like=""
     if [ -r /etc/os-release ]; then
+        # shellcheck source=/dev/null
         id=$(. /etc/os-release 2>/dev/null && echo "$ID")
+        # shellcheck source=/dev/null
         like=$(. /etc/os-release 2>/dev/null && echo "$ID_LIKE")
     fi
 
