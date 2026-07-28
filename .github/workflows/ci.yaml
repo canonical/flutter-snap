@@ -41,54 +41,15 @@ jobs:
 
   test:
     needs: build
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      fail-fast: false
-      # few at a time to possibly reduce conflicts due to docker host mounts
-      max-parallel: 3
-      matrix:
-        arch:
-          - amd64
-        image:
-          - debian-stable
-          - fedora-42
-          - opensuse-leap
-          - opensuse-tumbleweed
-          - ubuntu-22.04
-          - ubuntu-24.04
-          - ubuntu-25.10
-          - ubuntu-26.04
-        include:
-          - arch: amd64
-            runs-on: ubuntu-latest
-          # A single ARM test is enough to catch arch-specific regressions.
-          # The ubuntu-26.04-arm runner is still in public preview, so run the
-          # ubuntu-26.04 image on a 24.04 runner for now.
-          # TODO: switch to the ubuntu-26.04-arm runner once it is out of
-          # public preview.
-          - arch: arm64
-            image: ubuntu-26.04
-            runs-on: ubuntu-24.04-arm
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
-      - name: Build image
-        run: sudo ./.github/scripts/build-image.sh ./.github/docker/Dockerfile.${{ matrix.image }}
-      - name: Download Flutter snap
-        uses: actions/download-artifact@v4
-        with:
-          name: snap-${{ matrix.arch }}
-      - name: Install Flutter snap
-        run: sudo ./.github/scripts/install-flutter.sh --docker --dangerous "$(ls *.snap)"
-      - name: Build Flutter app
-        run: sudo ./.github/scripts/build-app.sh ${{ github.workspace }}/test/flutter_app
-      - name: Run Flutter app
-        run: sudo ./.github/scripts/run-app.sh
-        timeout-minutes: 15
+    uses: ./.github/workflows/test.yaml
+    with:
+      snap: artifact
 
   cleanup:
     needs: [build, test]
-    if: ${{ always() &&  github.event_name != 'workflow_dispatch' }}
+    # Only clean up when the tests passed, so the snaps are kept for
+    # inspection or re-runs when a test fails.
+    if: ${{ success() && github.event_name != 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Delete Flutter snap
