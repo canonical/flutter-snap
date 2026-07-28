@@ -44,6 +44,11 @@ while [ "$(docker exec snapc sh -c 'systemctl status snapd.seeded >/dev/null 2>&
 done
 echo " done"
 
+# Hold automatic refreshes so snapd does not spontaneously refresh (and
+# restart) itself during the tests, which can transiently fail with
+# "snapd rollback across the restart".
+docker exec snapc snap refresh --hold
+
 docker exec snapc snap install core --edge
 
 docker exec snapc mount -o rw,nosuid,nodev,noexec,relatime securityfs -t securityfs /sys/kernel/security || true
