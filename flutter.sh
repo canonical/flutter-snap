@@ -59,6 +59,38 @@ download_flutter_git () {
     fi
 }
 
+# Older revisions of this snap bundled the Linux build toolchain (ninja, and
+# in the past clang, cmake, ...) inside the snap. When an app was built,
+# CMake cached the absolute path to those tools (e.g.
+# /snap/flutter/current/usr/bin/ninja) in the project's build/linux directory.
+# The snap now uses the host toolchain and no longer ships these tools, so the
+# cached paths point at files that no longer exist and CMake fails with e.g.
+# "Running '/snap/flutter/current/usr/bin/ninja' '--version' failed". Detect
+# such a stale build directory and tell the user to run "flutter clean" so the
+# build is reconfigured against the host toolchain. This only warns; it never
+# deletes anything itself.
+warn_stale_cmake_cache () {
+  [ -d build/linux ] || return 0
+  local cache path
+  while IFS= read -r cache; do
+    while IFS= read -r path; do
+      if [ -n "$path" ] && [ ! -e "$path" ]; then
+        echo "" >&2
+        echo "This project's Linux build was configured against a previous version of" >&2
+        echo "the Flutter snap that bundled its own build tools. That toolchain is no" >&2
+        echo "longer part of the snap, so the cached path:" >&2
+        echo "" >&2
+        echo "  $path" >&2
+        echo "" >&2
+        echo "no longer exists and the build will fail. Run 'flutter clean' to remove" >&2
+        echo "the stale build configuration, then build again." >&2
+        echo "" >&2
+        return 0
+      fi
+    done < <(sed -n 's|^[^=]*=\(/snap/flutter/.*\)$|\1|p' "$cache")
+  done < <(find build/linux -name CMakeCache.txt 2>/dev/null)
+}
+
 if [ "$1" == "version" ]; then
   echo "WARNING: Flutter version command has been removed, using latest from channel"
   exit
@@ -109,6 +141,7 @@ if [ "$NEEDS_LINUX_TOOLCHAIN" == "1" ]; then
   # shellcheck source=check-deps.sh
   . "$SCRIPT_DIR/check-deps.sh"
   check_flutter_linux_deps || true
+  warn_stale_cmake_cache
 fi
 
 if [ "$1" == "sdk-path" ]; then
