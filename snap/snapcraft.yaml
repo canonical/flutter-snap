@@ -22,8 +22,6 @@ platforms:
 apps:
   flutter:
     command: flutter.sh
-  openurl:
-    command: openurl.sh
   dart:
     command: dart.sh
 
@@ -36,7 +34,6 @@ parts:
       cp flutter.sh $SNAPCRAFT_PART_INSTALL/
       cp check-deps.sh $SNAPCRAFT_PART_INSTALL/
       cp env.sh $SNAPCRAFT_PART_INSTALL/
-      cp openurl.sh $SNAPCRAFT_PART_INSTALL/
     stage-packages:
       - curl
       - git
