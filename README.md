@@ -35,9 +35,9 @@ to build applications.
 Once installed, use the `flutter` and `dart` commands as described in the
 [Flutter documentation](https://docs.flutter.dev/).
 
-The first time you run `flutter`, the snap downloads the latest stable release of
-the Flutter SDK into `~/snap/flutter/common/flutter`. This is a normal Flutter
-git checkout, so you can inspect and upgrade it as usual.
+The first time you run `flutter` or `dart`, the snap downloads the latest stable
+release of the Flutter SDK into `~/snap/flutter/common/flutter`. This is a
+normal Flutter git checkout, so you can inspect and upgrade it as usual.
 
 The bundled Dart SDK is available through the `dart` command. When another snap
 also provides a `dart` command, use `flutter.dart` to run the one from this snap:

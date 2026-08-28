@@ -9,8 +9,7 @@ SCRIPT_DIR=$(dirname "$0")
 DART="$SNAP_USER_COMMON/flutter/bin/dart"
 
 if [ ! -d "$SNAP_USER_COMMON/flutter/.git" ]; then
-    echo "Flutter not initialized, please run the flutter command once" >&2
-    exit 1
+    "$SCRIPT_DIR/flutter.sh" --reset
 fi
 
 if [ ! -x "$DART" ]; then
