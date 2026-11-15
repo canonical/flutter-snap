@@ -20,10 +20,16 @@ platforms:
   arm64:
 
 apps:
+  # Long-running processes started via these apps (e.g. the adb server or the
+  # Dart language server) run from the SDK in $SNAP_USER_COMMON, not from the
+  # snap, so let the snap refresh while they are running rather than being
+  # held back indefinitely.
   flutter:
     command: flutter.sh
+    refresh-mode: ignore-running
   dart:
     command: dart.sh
+    refresh-mode: ignore-running
 
 parts:
   flutter:
