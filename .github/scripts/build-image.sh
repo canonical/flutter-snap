@@ -49,6 +49,43 @@ echo " done"
 # "snapd rollback across the restart".
 docker exec snapc snap refresh --hold
 
-docker exec snapc snap install core --edge
+# Wait for snapd to answer API requests, (re)starting it if a self-restart
+# left it down.
+wait_snapd() {
+    TRIES=30
+    until docker exec snapc snap wait system seed.loaded >/dev/null 2>&1; do
+        TRIES=$((TRIES-1))
+        if [ "$TRIES" -le "0" ]; then
+            echo "snapd did not recover"
+            docker exec snapc systemctl status --no-pager snapd.socket snapd.service || true
+            return 1
+        fi
+        docker exec snapc systemctl reset-failed snapd.socket snapd.service || true
+        docker exec snapc systemctl start snapd.socket snapd.service || true
+        sleep 2
+    done
+}
+
+# Installing some snaps (notably the snapd snap) makes snapd restart itself,
+# which in a container occasionally fails with "snapd rollback across the
+# restart" or leaves snapd down. Retry until the install sticks.
+snap_install() {
+    for ATTEMPT in 1 2 3; do
+        if docker exec snapc snap install "$@"; then
+            wait_snapd
+            return 0
+        fi
+        echo "snap install $* failed (attempt $ATTEMPT), waiting for snapd to recover"
+        wait_snapd
+    done
+    return 1
+}
+
+snap_install core --edge
+
+# Install the prerequisites of the Flutter snap up front, so the snapd
+# restart they trigger happens here (with retries) rather than in the test.
+snap_install snapd
+snap_install core26
 
 docker exec snapc mount -o rw,nosuid,nodev,noexec,relatime securityfs -t securityfs /sys/kernel/security || true
