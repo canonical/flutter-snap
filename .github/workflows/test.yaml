@@ -33,13 +33,9 @@ jobs:
           - arch: amd64
             runs-on: ubuntu-latest
           # A single ARM test is enough to catch arch-specific regressions.
-          # The ubuntu-26.04-arm runner is still in public preview, so run the
-          # ubuntu-26.04 image on a 24.04 runner for now.
-          # TODO: switch to the ubuntu-26.04-arm runner once it is out of
-          # public preview.
           - arch: arm64
             image: ubuntu-26.04
-            runs-on: ubuntu-24.04-arm
+            runs-on: ubuntu-26.04-arm
     steps:
       - name: Git checkout
         uses: actions/checkout@v4

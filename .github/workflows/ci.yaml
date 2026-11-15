@@ -24,8 +24,7 @@ jobs:
           - arch: amd64
             runs-on: ubuntu-latest
           - arch: arm64
-            # TODO: switch to ubuntu-26.04-arm once it is out of public preview
-            runs-on: ubuntu-24.04-arm
+            runs-on: ubuntu-26.04-arm
     runs-on: ${{ matrix.runs-on }}
     steps:
       - name: Git checkout
